@@ -1,0 +1,38 @@
+version: "1.0"
+stages:
+  - "clone"
+  - "versioning"
+  - "build"
+  - "push"
+
+steps:
+  clone:
+    title: "Cloning repository"
+    type: "git-clone"
+    repo: "${{CF_REPO_OWNER}}/${{CF_REPO_NAME}}"
+    git: "github"
+    stage: "clone"
+    working_directory: ${{CF_VOLUME_PATH}}
+    revision: "${{CF_BRANCH}}"
+
+  build:
+    working_directory: ${{clone}}
+    image: rancher/golang:1.17-windowsservercore-20H2
+    commands:
+      - go build -o %PROJ% -gcflags='all=-N' ./%PROJ%
+    stage: build
+    scale:
+      build_agent:
+        environment:
+          - PROJ=agent
+
+  docker_build:
+    type: "build"
+    working_directory: "${{clone}}"
+    tag: "${{PACKAGE_VERSION}}${{WINDOWS_TAG_POSTFIX}}"
+    registry: "${{REGISTRY}}"
+    stage: "build"
+    scale:
+      docker_build_agent:
+        image_name: 'kraken-agent'
+        dockerfile: docker/agent/Dockerfile-windows

@@ -1,0 +1,157 @@
+version: "1.0"
+stages:
+  - "clone"
+  - "versioning"
+  - "build"
+  - "push"
+
+steps:
+  clone:
+    title: "Cloning repository"
+    type: "git-clone"
+    repo: "${{CF_REPO_OWNER}}/${{CF_REPO_NAME}}"
+    git: "github"
+    stage: "clone"
+    working_directory: ${{CF_VOLUME_PATH}}
+    revision: "${{CF_BRANCH}}"
+
+  export_version:
+    title: Export version
+    image: codefresh/cli
+    stage: "versioning"
+    working_directory: ${{clone}}
+    commands:
+      - if [ -z "$(git describe --always --tags)" ]; then exit 1; fi
+      - cf_export PACKAGE_VERSION=$(git describe --always --tags)
+      - cf_export LINUX_TAG_POSTFIX=-linuxamd64
+      - cf_export WINDOWS_TAG_POSTFIX=-windowsamd64
+
+  build:
+    working_directory: ${{clone}}
+    image: golang:1.17
+    commands:
+      - go build -o $PROJ -gcflags='all=-N -l' ./$PROJ
+    stage: build
+    scale:
+      build_agent:
+        environment:
+          - PROJ=agent
+      build_origin:
+        environment:
+          - PROJ=origin
+      build_proxy:
+        environment:
+          - PROJ=proxy
+      build_tracker:
+        environment:
+          - PROJ=tracker
+      build_build_index:
+        environment:
+          - PROJ=build-index
+      build_testfs:
+        environment:
+          - PROJ=tools/bin/testfs
+
+  docker_build:
+    type: "build"
+    working_directory: "${{clone}}"
+    tag: "${{PACKAGE_VERSION}}${{LINUX_TAG_POSTFIX}}"
+    registry: "${{REGISTRY}}"
+    stage: "build"
+    scale:
+      docker_build_agent:
+        image_name: 'kraken-agent'
+        dockerfile: docker/agent/Dockerfile
+      docker_build_origin:
+        image_name: 'kraken-origin'
+        dockerfile: docker/origin/Dockerfile
+      docker_build_proxy:
+        image_name: 'kraken-proxy'
+        dockerfile: docker/proxy/Dockerfile
+      docker_build_tracker:
+        image_name: 'kraken-tracker'
+        dockerfile: docker/tracker/Dockerfile
+      docker_build_build_index:
+        image_name: 'kraken-build-index'
+        dockerfile: docker/build-index/Dockerfile
+      docker_build_herd:
+        image_name: 'kraken-herd'
+        dockerfile: docker/herd/Dockerfile
+
+  run_windows_build:
+    type: codefresh-run
+    stage: "build"
+    arguments:
+      PIPELINE_ID: '${{CF_PIPELINE_NAME}}-windows'
+      TRIGGER_ID: '${{CF_PIPELINE_NAME}}'
+      BRANCH: ${{CF_BRANCH}}
+      SHA: '${{CF_REVISION}}'
+      DETACH: false
+      VARIABLE:
+        - CF_REPO_OWNER=${{CF_REPO_OWNER}}
+        - CF_REPO_NAME=${{CF_REPO_NAME}}
+        - CF_REVISION=${{CF_REVISION}}
+        - CF_BRANCH=${{CF_BRANCH}}
+        - CF_SHORT_REVISION=${{CF_SHORT_REVISION}}
+        - GIT_CONTEXT=github
+        - WINDOWS_TAG_POSTFIX=${{WINDOWS_TAG_POSTFIX}}
+        - PACKAGE_VERSION=${{PACKAGE_VERSION}}
+
+  multiarch_manifest_versioned:
+    title: "Push multiarch manifest: versioned"
+    type: "freestyle"
+    image: "mplatform/manifest-tool:latest"
+    working_directory: "${{clone}}"
+    stage: "push"
+    cmd:
+      - --debug
+      - --username
+      - ${{REGISTRY_USER}}
+      - --password
+      - ${{REGISTRY_PASSWORD}}
+      - push
+      - from-args
+      - --platforms
+    scale:
+      multiarch_manifest_versioned_agent:
+        cmd:
+          - linux/amd64,windows/amd64
+          - --template
+          - ${{REGISTRY_FULL_URL}}/kraken-agent:${{PACKAGE_VERSION}}-OSARCHVARIANT
+          - --target 
+          - ${{REGISTRY_FULL_URL}}/kraken-agent:${{PACKAGE_VERSION}}
+      multiarch_manifest_versioned_origin:
+        cmd:
+          - linux/amd64
+          - --template
+          - ${{REGISTRY_FULL_URL}}/kraken-origin:${{PACKAGE_VERSION}}-OSARCHVARIANT
+          - --target 
+          - ${{REGISTRY_FULL_URL}}/kraken-origin:${{PACKAGE_VERSION}}
+      multiarch_manifest_versioned_proxy:
+        cmd:
+          - linux/amd64
+          - --template
+          - ${{REGISTRY_FULL_URL}}/kraken-proxy:${{PACKAGE_VERSION}}-OSARCHVARIANT
+          - --target 
+          - ${{REGISTRY_FULL_URL}}/kraken-proxy:${{PACKAGE_VERSION}}
+      multiarch_manifest_versioned_tracker:
+        cmd:
+          - linux/amd64
+          - --template
+          - ${{REGISTRY_FULL_URL}}/kraken-tracker:${{PACKAGE_VERSION}}-OSARCHVARIANT
+          - --target 
+          - ${{REGISTRY_FULL_URL}}/kraken-tracker:${{PACKAGE_VERSION}}
+      multiarch_manifest_versioned_build_index:
+        cmd:
+          - linux/amd64
+          - --template
+          - ${{REGISTRY_FULL_URL}}/kraken-build-index:${{PACKAGE_VERSION}}-OSARCHVARIANT
+          - --target 
+          - ${{REGISTRY_FULL_URL}}/kraken-build-index:${{PACKAGE_VERSION}}
+      multiarch_manifest_versioned_herd:
+        cmd:
+          - linux/amd64
+          - --template
+          - ${{REGISTRY_FULL_URL}}/kraken-herd:${{PACKAGE_VERSION}}-OSARCHVARIANT
+          - --target 
+          - ${{REGISTRY_FULL_URL}}/kraken-herd:${{PACKAGE_VERSION}}

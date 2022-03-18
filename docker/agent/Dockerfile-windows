@@ -1,0 +1,25 @@
+FROM mcr.microsoft.com/windows/nanoserver:20H2
+
+ARG NGINX_VERSION=1.21.6
+
+# Setup folder structure as close to linux version as possible
+RUN mkdir C:\nginx && \
+    mkdir C:\usr\sbin && \
+    mkdir C:\etc && \
+    curl -o "%TMP%\nginx-%NGINX_VERSION%.zip" "http://nginx.org/download/nginx-%NGINX_VERSION%.zip" && \
+    tar -xf "%TMP%\nginx-%NGINX_VERSION%.zip" -C C:\nginx && \
+    copy "C:\nginx\nginx-%NGINX_VERSION%\nginx.exe" C:\usr\sbin\nginx && \
+    xcopy "C:\nginx\nginx-%NGINX_VERSION%\conf" C:\etc\nginx /E /H /I && \
+    del "%TMP%\nginx-%NGINX_VERSION%.zip"
+
+RUN mkdir C:\var\log\kraken\kraken-agent
+RUN mkdir C:\var\cache\kraken\kraken-agent
+RUN mkdir C:\var\run\kraken
+
+
+COPY ./agent/agent.exe /usr/bin/kraken-agent
+COPY ./config /etc/kraken/config
+COPY ./nginx/config /etc/kraken/nginx/config
+COPY ./test/tls /etc/kraken/tls
+
+WORKDIR C:/etc/kraken
