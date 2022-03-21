@@ -155,3 +155,13 @@ steps:
           - ${{REGISTRY_FULL_URL}}/kraken-herd:${{PACKAGE_VERSION}}-OSARCHVARIANT
           - --target 
           - ${{REGISTRY_FULL_URL}}/kraken-herd:${{PACKAGE_VERSION}}
+
+  push_helm_chart:
+    type: helm
+    title: "Build and push helm chart"
+    stage: "push"
+    working_directory: "${{clone}}"
+    arguments:
+      action: push
+      chart_name: "helm"
+      chart_version: "${{PACKAGE_VERSION}}"
