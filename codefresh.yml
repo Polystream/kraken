@@ -159,6 +159,7 @@ steps:
   push_helm_chart:
     type: helm
     title: "Build and push helm chart"
+    helm_version: 3.4.1
     stage: "push"
     working_directory: "${{clone}}"
     arguments:
