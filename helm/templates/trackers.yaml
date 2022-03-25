@@ -36,6 +36,10 @@ spec:
         volumeMounts:
         - name: config
           mountPath: /etc/config
+    {{- with .Values.kraken.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
 {{ with .Values.tracker.extraVolumeMounts }}{{ toYaml . | indent 8 }}{{ end }}
       volumes:
       - name: config

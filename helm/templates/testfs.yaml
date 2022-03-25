@@ -28,6 +28,10 @@ spec:
         command:
         - /usr/bin/kraken-testfs
         - --port=80
+    {{- with .Values.kraken.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
 ---
 kind: Service
 apiVersion: v1
