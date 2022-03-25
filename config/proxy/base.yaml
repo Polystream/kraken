@@ -4,7 +4,7 @@ castore:
   capacity: 1024
 
 zap:
-  level: info
+  level: debug
   development: false
   encoding: console
   disableStacktrace: true
@@ -34,7 +34,7 @@ registry:
   docker:
     version: 0.1
     log:
-      level: error
+      level: debug
     http:
       net: unix
       addr: /tmp/kraken-proxy-registry.sock
