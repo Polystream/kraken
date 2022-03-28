@@ -220,7 +220,14 @@ func Run(config Config, params map[string]interface{}, opts ...Option) error {
 		return fmt.Errorf("open stdout log: %s", err)
 	}
 
-	args := []string{filepath.FromSlash(config.Binary), "-g", "daemon off;", "-c", conf}
+	binary := config.Binary
+
+	nginxEnv, exists := os.LookupEnv("NGINX_BINARY")
+	if exists {
+		binary = nginxEnv
+	}
+
+	args := []string{binary, "-g", "daemon off;", "-c", conf}
 	if config.Root {
 		args = append([]string{"sudo"}, args...)
 	}
