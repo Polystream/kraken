@@ -220,7 +220,7 @@ func Run(config Config, params map[string]interface{}, opts ...Option) error {
 		return fmt.Errorf("open stdout log: %s", err)
 	}
 
-	args := []string{config.Binary, "-g", "daemon off;", "-c", conf}
+	args := []string{filepath.FromSlash(config.Binary), "-g", "daemon off;", "-c", conf}
 	if config.Root {
 		args = append([]string{"sudo"}, args...)
 	}
