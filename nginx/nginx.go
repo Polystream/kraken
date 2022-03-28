@@ -210,7 +210,8 @@ func Run(config Config, params map[string]interface{}, opts ...Option) error {
 		return fmt.Errorf("build nginx config: %s", err)
 	}
 
-	conf := filepath.Join(_genDir, config.Name)
+	conf := filepath.Join(filepath.FromSlash(_genDir), config.Name)
+	log.Infof("Config path: %s", conf)
 	if err := ioutil.WriteFile(conf, src, 0755); err != nil {
 		return fmt.Errorf("write src: %s", err)
 	}
