@@ -19,6 +19,7 @@ worker_processes 4;
 worker_rlimit_nofile 4096;
 pid /tmp/nginx.pid;
 user root root;
+error_log stderr;
 
 events {
   worker_connections 2048;
@@ -31,6 +32,7 @@ http {
   # Basic Settings
   ##
 
+  client_body_temp_path temp 2;
   sendfile on;
   tcp_nopush on;
   tcp_nodelay on;

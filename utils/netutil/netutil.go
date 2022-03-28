@@ -19,8 +19,6 @@ import (
 	"net"
 	"strings"
 	"time"
-
-	"github.com/uber/kraken/utils/log"
 )
 
 // _supportedInterfaces is an ordered list of ip interfaces from which
@@ -70,14 +68,12 @@ func GetIP(host string) (net.IP, error) {
 // GetLocalIP returns the ip address of the local machine.
 func GetLocalIP() (string, error) {
 	ifaces, err := net.Interfaces()
-	log.Infof("interfaces: %s", ifaces)
 	if err != nil {
 		return "", fmt.Errorf("interfaces: %s", err)
 	}
 	ips := map[string]string{}
 	for _, i := range ifaces {
 		addrs, err := i.Addrs()
-		log.Infof("Addresses: %s", addrs)
 		if err != nil {
 			return "", fmt.Errorf("addrs: %s", err)
 		}
@@ -100,8 +96,6 @@ func GetLocalIP() (string, error) {
 			if idx := strings.IndexByte(iName, ' '); idx >= 0 {
 				iName = iName[:idx]
 			}
-			log.Infof("name: %s", iName)
-			log.Infof("ip: %s", ip)
 			ips[iName] = ip.String()
 			break
 		}
