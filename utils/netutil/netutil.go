@@ -17,6 +17,7 @@ import (
 	"errors"
 	"fmt"
 	"net"
+	"strings"
 	"time"
 
 	"github.com/uber/kraken/utils/log"
@@ -24,7 +25,7 @@ import (
 
 // _supportedInterfaces is an ordered list of ip interfaces from which
 // host ip is determined.
-var _supportedInterfaces = []string{"eth0", "ib0", "ethernet", "Ethernet"}
+var _supportedInterfaces = []string{"eth0", "ib0", "ethernet", "Ethernet", "vEthernet", "vethernet"}
 
 func min(a, b time.Duration) time.Duration {
 	if a < b {
@@ -95,9 +96,13 @@ func GetLocalIP() (string, error) {
 			if ip == nil {
 				continue
 			}
-			log.Infof("name: %s", i.Name)
+			iName := i.Name
+			if idx := strings.IndexByte(iName, ' '); idx >= 0 {
+				iName = iName[:idx]
+			}
+			log.Infof("name: %s", iName)
 			log.Infof("ip: %s", ip)
-			ips[i.Name] = ip.String()
+			ips[iName] = ip.String()
 			break
 		}
 	}
