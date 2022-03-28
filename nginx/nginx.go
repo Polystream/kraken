@@ -227,7 +227,7 @@ func Run(config Config, params map[string]interface{}, opts ...Option) error {
 		binary = nginxEnv
 	}
 
-	args := []string{binary, "-g", "daemon off;", "-c", conf}
+	args := []string{binary, "-g", "daemon off;", "-c", filepath.FromSlash(conf)}
 	if config.Root {
 		args = append([]string{"sudo"}, args...)
 	}
