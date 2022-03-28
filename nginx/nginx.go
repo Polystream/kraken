@@ -210,8 +210,7 @@ func Run(config Config, params map[string]interface{}, opts ...Option) error {
 		return fmt.Errorf("build nginx config: %s", err)
 	}
 
-	conf := filepath.Join(filepath.FromSlash(_genDir), config.Name)
-	log.Infof("Config path: %s", conf)
+	conf := filepath.Join(_genDir, config.Name)
 	if err := ioutil.WriteFile(conf, src, 0755); err != nil {
 		return fmt.Errorf("write src: %s", err)
 	}
@@ -228,7 +227,7 @@ func Run(config Config, params map[string]interface{}, opts ...Option) error {
 		binary = nginxEnv
 	}
 
-	args := []string{binary, "-g", "daemon off;", "-c", filepath.FromSlash(conf)}
+	args := []string{binary, "-g", "daemon off;", "-c", filepath.Join(os.Getenv("SystemDrive"), filepath.FromSlash(conf))}
 	if config.Root {
 		args = append([]string{"sudo"}, args...)
 	}
