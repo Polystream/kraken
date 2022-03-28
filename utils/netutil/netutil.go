@@ -22,7 +22,7 @@ import (
 
 // _supportedInterfaces is an ordered list of ip interfaces from which
 // host ip is determined.
-var _supportedInterfaces = []string{"eth0", "ib0"}
+var _supportedInterfaces = []string{"eth0", "ib0", "ethernet", "Ethernet"}
 
 func min(a, b time.Duration) time.Duration {
 	if a < b {
