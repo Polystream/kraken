@@ -22,6 +22,7 @@ import (
 	"os/exec"
 	"path"
 	"path/filepath"
+	"runtime"
 	"text/template"
 
 	"github.com/uber/kraken/nginx/config"
@@ -90,9 +91,9 @@ func (c *Config) inject(params map[string]interface{}) error {
 			return fmt.Errorf("invalid params: %s is reserved", s)
 		}
 	}
-	params["cache_dir"] = c.CacheDir
-	params["access_log_path"] = c.AccessLogPath
-	params["error_log_path"] = c.ErrorLogPath
+	params["cache_dir"] = filepath.Join(os.Getenv("SystemDrive"), filepath.FromSlash(c.CacheDir))
+	params["access_log_path"] = filepath.Join(os.Getenv("SystemDrive"), filepath.FromSlash(c.AccessLogPath))
+	params["error_log_path"] = filepath.Join(os.Getenv("SystemDrive"), filepath.FromSlash(c.ErrorLogPath))
 	return nil
 }
 
@@ -138,6 +139,7 @@ func (c *Config) Build(params map[string]interface{}) ([]byte, error) {
 		"ssl_certificate_key":    c.tls.Server.Key.Path,
 		"ssl_password_file":      c.tls.Server.Passphrase.Path,
 		"ssl_client_certificate": _clientCABundle,
+		"is_windows":             runtime.GOOS == "windows",
 	})
 	if err != nil {
 		return nil, fmt.Errorf("populate base: %s", err)
