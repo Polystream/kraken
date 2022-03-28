@@ -91,9 +91,9 @@ func (c *Config) inject(params map[string]interface{}) error {
 			return fmt.Errorf("invalid params: %s is reserved", s)
 		}
 	}
-	params["cache_dir"] = filepath.Join(os.Getenv("SystemDrive"), filepath.FromSlash(c.CacheDir))
-	params["access_log_path"] = filepath.Join(os.Getenv("SystemDrive"), filepath.FromSlash(c.AccessLogPath))
-	params["error_log_path"] = filepath.Join(os.Getenv("SystemDrive"), filepath.FromSlash(c.ErrorLogPath))
+	params["cache_dir"] = filepath.ToSlash(filepath.Join(os.Getenv("SystemDrive"), c.CacheDir))
+	params["access_log_path"] = filepath.ToSlash(filepath.Join(os.Getenv("SystemDrive"), c.AccessLogPath))
+	params["error_log_path"] = filepath.ToSlash(filepath.Join(os.Getenv("SystemDrive"), c.ErrorLogPath))
 	return nil
 }
 
