@@ -47,6 +47,6 @@ server {
   access_log {{.access_log_path}};
   error_log {{.error_log_path}};
 
-  return 301 http://$remote_addr:{{.port}}$request_uri; 
+  return 301 http://$remote_addr:30081$request_uri; 
 }
 `
