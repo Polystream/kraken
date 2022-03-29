@@ -36,6 +36,7 @@ http {
   # Basic Settings
   ##
 
+  error_log stderr;
   client_body_temp_path temp 2;
   sendfile on;
   tcp_nopush on;
