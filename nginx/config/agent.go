@@ -41,4 +41,12 @@ server {
     proxy_next_upstream error timeout http_404 http_500;
   }
 }
+
+server {
+  listen 8088;
+  access_log {{.access_log_path}};
+  error_log {{.error_log_path}};
+
+  return 301 http://$remote_addr:{{.port}}$request_uri; 
+}
 `
