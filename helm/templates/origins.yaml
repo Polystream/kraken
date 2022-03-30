@@ -22,7 +22,7 @@ spec:
     spec:
       {{ with .Values.origin.affinity -}}
       affinity:
-{{ toYaml . | indent 6 }}
+{{ toYaml . | indent 8 }}
       {{- end }}
       {{ with .Values.origin.initContainers -}}
       initContainers:

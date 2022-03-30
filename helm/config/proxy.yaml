@@ -5,3 +5,7 @@ extends: /etc/kraken/config/proxy/base.yaml
 
 nginx:
   cache_dir: /tmp/kraken-proxy-nginx/
+
+{{ with .Values.proxy.additionalConfig -}}
+{{ tpl . $ }}
+{{- end }}

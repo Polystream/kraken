@@ -25,7 +25,7 @@ spec:
       {{- end }}
       {{ with .Values.agent.affinity -}}
       affinity:
-{{ toYaml . | indent 6 }}
+{{ toYaml . | indent 8 }}
       {{- end }}
       {{ with .Values.agent.initContainers -}}
       initContainers:

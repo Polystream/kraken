@@ -11,3 +11,7 @@ trackerserver:
 
 nginx:
   cache_dir: /tmp/kraken-tracker-nginx/
+
+{{ with .Values.tracker.additionalConfig -}}
+{{ tpl . $ }}
+{{- end }}

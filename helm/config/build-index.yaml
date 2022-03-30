@@ -33,3 +33,6 @@ writeback:
 
 nginx:
   cache_dir: /tmp/kraken-build-index-nginx/
+{{ with .Values.build_index.additionalConfig -}}
+{{ tpl . $ }}
+{{- end }}
