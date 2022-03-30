@@ -20,6 +20,10 @@ spec:
 {{ tpl . $ | indent 8 }}
       {{- end }}
     spec:
+      {{ with .Values.build_index.affinity -}}
+      affinity:
+{{ toYaml . | indent 6 }}
+      {{- end }}
       {{ with .Values.build_index.initContainers -}}
       initContainers:
 {{ toYaml . | indent 6 }}{{ end }}
@@ -37,24 +41,6 @@ spec:
         ports:
         - containerPort: 80
           name: build-index
-        livenessProbe:
-          httpGet:
-            path: /health
-            port: build-index
-          failureThreshold: 1
-          periodSeconds: 10
-        startupProbe:
-          httpGet:
-            path: /health
-            port: build-index
-          failureThreshold: 30
-          periodSeconds: 10
-        readinessProbe:
-          httpGet:
-            path: /health
-            port: build-index
-          periodSeconds: 10
-          initialDelaySeconds: 5
     {{- with .Values.kraken.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
@@ -80,3 +66,21 @@ spec:
   - protocol: TCP
     port: 80
     targetPort: 80
+{{- if .Values.kraken.disruptionBudget.enabled }}
+---
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: kraken-build-index
+  labels:
+    app.kubernetes.io/name: kraken
+    app.kubernetes.io/component: build-index
+    app.kubernetes.io/instance: {{ .Release.Name }}
+spec:
+  minAvailable: {{ .Values.kraken.disruptionBudget.minAvaiable }}
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: kraken
+      app.kubernetes.io/component: build-index
+      app.kubernetes.io/instance: {{ .Release.Name }}
+{{- end }}

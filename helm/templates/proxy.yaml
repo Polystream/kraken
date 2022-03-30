@@ -21,6 +21,10 @@ spec:
 {{ tpl . $ | indent 8 }}
       {{- end }}
     spec:
+      {{ with .Values.proxy.affinity -}}
+      affinity:
+{{ toYaml . | indent 6 }}
+      {{- end }}
       {{ with .Values.proxy.initContainers -}}
       initContainers:
 {{ toYaml . | indent 6 }}{{ end }}
@@ -88,3 +92,21 @@ spec:
     port: 10050
     targetPort: 10050
     name: server
+{{- if .Values.kraken.disruptionBudget.enabled }}
+---
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: kraken-proxy
+  labels:
+    app.kubernetes.io/name: kraken
+    app.kubernetes.io/component: proxy
+    app.kubernetes.io/instance: {{ .Release.Name }}
+spec:
+  minAvailable: {{ .Values.kraken.disruptionBudget.minAvaiable }}
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: kraken
+      app.kubernetes.io/component: proxy
+      app.kubernetes.io/instance: {{ .Release.Name }}
+{{- end }}

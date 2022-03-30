@@ -23,6 +23,10 @@ spec:
       tolerations:
 {{ toYaml . | indent 6 }}
       {{- end }}
+      {{ with .Values.agent.affinity -}}
+      affinity:
+{{ toYaml . | indent 6 }}
+      {{- end }}
       {{ with .Values.agent.initContainers -}}
       initContainers:
 {{ toYaml . | indent 6 -}}

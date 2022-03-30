@@ -20,6 +20,10 @@ spec:
 {{ tpl . $ | indent 8 }}
       {{- end }}
     spec:
+      {{ with .Values.tracker.affinity -}}
+      affinity:
+{{ toYaml . | indent 6 }}
+      {{- end }}
       {{ with .Values.tracker.initContainers -}}
       initContainers:
 {{ tpl . $ | indent 6 }}{{- end }}
@@ -39,24 +43,6 @@ spec:
         ports:
         - containerPort: 80
           name: tracker
-        livenessProbe:
-          httpGet:
-            path: /health
-            port: tracker
-          failureThreshold: 1
-          periodSeconds: 10
-        startupProbe:
-          httpGet:
-            path: /healthz
-            port: tracker
-          failureThreshold: 30
-          periodSeconds: 10
-        readinessProbe:
-          httpGet:
-            path: /health
-            port: tracker
-          periodSeconds: 10
-          initialDelaySeconds: 5
     {{- with .Values.kraken.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
@@ -82,3 +68,21 @@ spec:
   - protocol: TCP
     port: 80
     targetPort: 80
+{{- if .Values.kraken.disruptionBudget.enabled }}
+---
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: kraken-tracker
+  labels:
+    app.kubernetes.io/name: kraken
+    app.kubernetes.io/component: tracker
+    app.kubernetes.io/instance: {{ .Release.Name }}
+spec:
+  minAvailable: {{ .Values.kraken.disruptionBudget.minAvaiable }}
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: kraken
+      app.kubernetes.io/component: tracker
+      app.kubernetes.io/instance: {{ .Release.Name }}
+{{- end }}
