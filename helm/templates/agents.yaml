@@ -22,11 +22,11 @@ spec:
       {{ with .Values.agent.tolerations -}}
       tolerations:
 {{ toYaml . | indent 6 }}
-      {{- end -}}
+      {{- end }}
       {{ with .Values.agent.initContainers -}}
       initContainers:
 {{ toYaml . | indent 6 -}}
-      {{- end -}}
+      {{- end }}
       containers:
       - name: main
         image: {{ .Values.kraken.repository }}/kraken-agent:{{ .Values.kraken.tag }}
