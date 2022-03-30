@@ -41,6 +41,7 @@ spec:
           httpGet:
             path: /health
             port: build-index
+          initialDelaySeconds: 15
           failureThreshold: 1
           periodSeconds: 10
         readinessProbe:
@@ -48,6 +49,7 @@ spec:
             path: /health
             port: build-index
           periodSeconds: 10
+          initialDelaySeconds: 5
     {{- with .Values.kraken.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}

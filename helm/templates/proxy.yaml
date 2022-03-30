@@ -47,11 +47,13 @@ spec:
             port: server-port
           failureThreshold: 1
           periodSeconds: 10
+          initialDelaySeconds: 15
         readinessProbe:
           httpGet:
             path: /health
             port: server-port
           periodSeconds: 10
+          initialDelaySeconds: 5
     {{- with .Values.kraken.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}

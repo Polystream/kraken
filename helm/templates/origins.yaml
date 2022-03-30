@@ -45,11 +45,13 @@ spec:
             port: blobserver
           failureThreshold: 1
           periodSeconds: 10
+          initialDelaySeconds: 15
         readinessProbe:
           httpGet:
             path: /health
             port: blobserver
           periodSeconds: 10
+          initialDelaySeconds: 5
     {{- with .Values.kraken.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
