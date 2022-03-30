@@ -36,17 +36,17 @@ spec:
           mountPath: /etc/config
         ports:
         - containerPort: 80
-          name: build-index-server
+          name: build-index
         livenessProbe:
           httpGet:
             path: /health
-            port: build-index-server
+            port: build-index
           failureThreshold: 1
           periodSeconds: 10
         readinessProbe:
           httpGet:
             path: /health
-            port: build-index-server
+            port: build-index
           periodSeconds: 10
     {{- with .Values.kraken.imagePullSecrets }}
       imagePullSecrets:
@@ -72,4 +72,4 @@ spec:
   ports:
   - protocol: TCP
     port: 80
-    targetPort: build-index-server
+    targetPort: build-index
