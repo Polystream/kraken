@@ -51,8 +51,13 @@ spec:
           httpGet:
             path: /health
             port: agent-server
-          initialDelaySeconds: 15
           failureThreshold: 1
+          periodSeconds: 10
+        startupProbe:
+          httpGet:
+            path: /health
+            port: agent-server
+          failureThreshold: 30
           periodSeconds: 10
         readinessProbe:
           httpGet:

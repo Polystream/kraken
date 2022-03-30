@@ -41,8 +41,13 @@ spec:
           httpGet:
             path: /health
             port: build-index
-          initialDelaySeconds: 15
           failureThreshold: 1
+          periodSeconds: 10
+        startupProbe:
+          httpGet:
+            path: /health
+            port: build-index
+          failureThreshold: 30
           periodSeconds: 10
         readinessProbe:
           httpGet:

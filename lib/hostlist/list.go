@@ -61,10 +61,12 @@ func New(config Config) (List, error) {
 	l := &list{resolver: resolver}
 	l.snapshotTrap = dedup.NewIntervalTrap(config.TTL, clock.New(), &snapshotTask{l})
 
-	if err := l.takeSnapshot(); err != nil {
-		// Fail fast if a snapshot cannot be initialized.
-		return nil, err
-	}
+	// This can fail when kubernetes readiness/liveness probes are in place
+	// as the endpoint might not be ready yet
+	//if err := l.takeSnapshot(); err != nil {
+	// Fail fast if a snapshot cannot be initialized.
+	//	return nil, err
+	//}
 	return l, nil
 }
 
