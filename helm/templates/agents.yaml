@@ -40,6 +40,24 @@ spec:
         volumeMounts:
         - name: config
           mountPath: /etc/config
+        ports:
+        - containerPort: 80
+          name: agent-server
+        - containerPort: 8080
+          name: peer
+        - containerPort: 8081
+          name: agent-registry
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: agent-server
+          failureThreshold: 1
+          periodSeconds: 10
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: agent-server
+          periodSeconds: 10
     {{- with .Values.kraken.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
@@ -64,6 +82,7 @@ spec:
   ports:
   - protocol: TCP
     port: 80
-    targetPort: 8081
+    targetPort: agent-registry
     nodePort: {{ .Values.kraken.registry_port }}
   externalTrafficPolicy: Local
+  internalTrafficPolicy: Local

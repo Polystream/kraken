@@ -32,9 +32,26 @@ spec:
         - /usr/bin/kraken-proxy
         - --config={{ .Values.proxy.config }}
         - --port=80
+        - --server-port=10050
         volumeMounts:
         - name: config
           mountPath: /etc/config
+        ports:
+        - containerPort: 80
+          name: proxy
+        - containerPort: 10050
+          name: server-port
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: server-port
+          failureThreshold: 1
+          periodSeconds: 10
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: server-port
+          periodSeconds: 10
     {{- with .Values.kraken.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
@@ -58,4 +75,7 @@ spec:
   ports:
   - protocol: TCP
     port: 80
-    targetPort: 80
+    targetPort: proxy
+  - protocol: TCP
+    port: 10050
+    targetPort: server-port

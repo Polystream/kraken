@@ -34,6 +34,20 @@ spec:
         volumeMounts:
         - name: config
           mountPath: /etc/config
+        ports:
+        - containerPort: 80
+          name: build-index-server
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: build-index-server
+          failureThreshold: 1
+          periodSeconds: 10
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: build-index-server
+          periodSeconds: 10
     {{- with .Values.kraken.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
@@ -58,4 +72,4 @@ spec:
   ports:
   - protocol: TCP
     port: 80
-    targetPort: 80
+    targetPort: build-index-server

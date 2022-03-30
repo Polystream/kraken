@@ -36,6 +36,20 @@ spec:
         volumeMounts:
         - name: config
           mountPath: /etc/config
+        ports:
+        - containerPort: 80
+          name: tracker
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: tracker
+          failureThreshold: 1
+          periodSeconds: 10
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: tracker
+          periodSeconds: 10
     {{- with .Values.kraken.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
@@ -60,4 +74,4 @@ spec:
   ports:
   - protocol: TCP
     port: 80
-    targetPort: 80
+    targetPort: tracker
