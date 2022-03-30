@@ -82,7 +82,7 @@ spec:
   ports:
   - protocol: TCP
     port: 80
-    targetPort: agent-registry
+    targetPort: 8081
     nodePort: {{ .Values.kraken.registry_port }}
   externalTrafficPolicy: Local
   internalTrafficPolicy: Local
