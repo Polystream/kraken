@@ -8,6 +8,7 @@ kraken:
     minAvaiable: 50%
 
 tracker:
+  enabled: true
   config: /etc/config/tracker.yaml
   replicas: 3
   externalRedis:
@@ -30,6 +31,7 @@ tracker:
 #          mountPath: /etc/config
 
 build_index:
+  enabled: true
   config: /etc/config/build-index.yaml
   replicas: 3
   annotations:
@@ -47,6 +49,7 @@ build_index:
 #              password: "12345"
 
 origin:
+  enabled: true
   config: /etc/config/origin.yaml
   replicas: 3
   annotations:
@@ -64,6 +67,7 @@ origin:
 #              password: "12345"
 
 proxy:
+  enabled: true
   config: /etc/config/proxy.yaml
   replicas: 1
   annotations:
@@ -72,6 +76,7 @@ proxy:
   initContainers:
 
 agent:
+  enabled: true
   config: /etc/config/agent.yaml
   annotations:
   extraVolumes:

@@ -1,3 +1,4 @@
+{{- if .Values.build_index.enabled }}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -83,4 +84,5 @@ spec:
       app.kubernetes.io/name: kraken
       app.kubernetes.io/component: build-index
       app.kubernetes.io/instance: {{ .Release.Name }}
+{{- end }}
 {{- end }}

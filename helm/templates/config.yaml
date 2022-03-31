@@ -3,8 +3,18 @@ kind: ConfigMap
 metadata:
   name: kraken
 data:
+  {{- if .Values.agent.enabled }}
   agent.yaml: {{ tpl (.Files.Get "config/agent.yaml") . | toYaml | indent 2 }}
+  {{- end }}
+  {{- if .Values.build_index.enabled }}
   build-index.yaml: {{ tpl (.Files.Get "config/build-index.yaml") . | toYaml | indent 2 }}
+  {{- end }}
+  {{- if .Values.origin.enabled }}
   origin.yaml: {{ tpl (.Files.Get "config/origin.yaml") . | toYaml | indent 2 }}
+  {{- end }}
+  {{- if .Values.proxy.enabled }}
   proxy.yaml: {{ tpl (.Files.Get "config/proxy.yaml") . | toYaml | indent 2 }}
+  {{- end }}
+  {{- if .Values.tracker.enabled }}
   tracker.yaml: {{ tpl (.Files.Get "config/tracker.yaml") . | toYaml | indent 2 }}
+  {{- end }}

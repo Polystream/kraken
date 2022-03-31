@@ -217,10 +217,10 @@ func Run(config Config, params map[string]interface{}, opts ...Option) error {
 		return fmt.Errorf("write src: %s", err)
 	}
 
-	// stdout, err := os.OpenFile(config.StdoutLogPath, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
-	// if err != nil {
-	// 	return fmt.Errorf("open stdout log: %s", err)
-	// }
+	stdout, err := os.OpenFile(config.StdoutLogPath, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
+	if err != nil {
+		return fmt.Errorf("open stdout log: %s", err)
+	}
 
 	binary := config.Binary
 
@@ -234,8 +234,8 @@ func Run(config Config, params map[string]interface{}, opts ...Option) error {
 		args = append([]string{"sudo"}, args...)
 	}
 	cmd := exec.Command(args[0], args[1:]...)
-	cmd.Stdout = os.Stdout // stdout
-	cmd.Stderr = os.Stderr // stdout
+	cmd.Stdout = stdout
+	cmd.Stderr = stdout
 	return cmd.Run()
 }
 

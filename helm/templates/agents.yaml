@@ -1,3 +1,4 @@
+{{- if .Values.agent.enabled }}
 apiVersion: apps/v1
 kind: DaemonSet
 metadata:
@@ -97,3 +98,4 @@ spec:
     nodePort: {{ .Values.kraken.registry_port }}
   externalTrafficPolicy: Local
   internalTrafficPolicy: Local
+{{- end }}
