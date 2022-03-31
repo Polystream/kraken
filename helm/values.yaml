@@ -10,6 +10,8 @@ kraken:
 tracker:
   config: /etc/config/tracker.yaml
   replicas: 3
+  externalRedis:
+    enabled: false
   extraVolumes:
 #  - name: nginx-cache
 #    hostPath:

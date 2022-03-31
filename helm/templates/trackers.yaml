@@ -28,8 +28,10 @@ spec:
       initContainers:
 {{ tpl . $ | indent 6 }}{{- end }}
       containers:
+      {{- if not .Values.tracker.externalRedis.enabled }}
       - name: redis
         image: redis:5.0
+      {{- end }}
       - name: main
         image: {{ .Values.kraken.repository }}/kraken-tracker:{{ .Values.kraken.tag }}
         imagePullPolicy: {{ .Values.kraken.imagePullPolicy }}

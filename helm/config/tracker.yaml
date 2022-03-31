@@ -4,7 +4,17 @@ extends: /etc/kraken/config/tracker/base.yaml
 
 peerstore:
   redis:
+    {{- if not .Values.tracker.externalRedis.enabled }}
     addr: 127.0.0.1:6379
+    {{- else }}
+    addr: {{ .Values.tracker.externalRedis.address }}
+    {{- if .Values.tracker.externalRedis.password }}
+    password: {{ .Values.tracker.externalRedis.password }}
+    {{- end }}
+    {{- if .Values.tracker.externalRedis.db }}
+    db: {{ .Values.tracker.externalRedis.db }}
+    {{- end }}
+    {{- end }}
 
 trackerserver:
   announce_interval: 3s
