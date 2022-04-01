@@ -1,5 +1,5 @@
 zap:
-  level: info
+  level: debug
   development: false
   disableStacktrace: true
   encoding: console
@@ -22,7 +22,7 @@ zap:
     - /var/log/kraken/kraken-tracker/stdout.log
 
 logging:
-  level: info
+  level: debug
   stdout: true
   sentry:
     enabled: false

@@ -83,13 +83,23 @@ func NewRedisStore(config RedisConfig, clk clock.Clock) (*RedisStore, error) {
 		config: config,
 		pool: &redis.Pool{
 			Dial: func() (redis.Conn, error) {
-				// TODO Add options
+				var opts []redis.DialOption
+				if len(config.Password) > 0 {
+					opts = append(opts, redis.DialPassword(config.Password))
+				}
+				if config.DB > 0 {
+					opts = append(opts, redis.DialDatabase(config.DB))
+				}
+
 				return redis.Dial(
 					"tcp",
 					config.Addr,
-					redis.DialConnectTimeout(config.DialTimeout),
-					redis.DialReadTimeout(config.ReadTimeout),
-					redis.DialWriteTimeout(config.WriteTimeout))
+					append(
+						opts,
+						redis.DialConnectTimeout(config.DialTimeout),
+						redis.DialReadTimeout(config.ReadTimeout),
+						redis.DialWriteTimeout(config.WriteTimeout),
+					)...)
 			},
 			MaxIdle:     config.MaxIdleConns,
 			MaxActive:   config.MaxActiveConns,

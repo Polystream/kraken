@@ -1,3 +1,4 @@
+{{- if .Values.proxy.enabled }}
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -21,6 +22,10 @@ spec:
 {{ tpl . $ | indent 8 }}
       {{- end }}
     spec:
+      {{ with .Values.proxy.affinity -}}
+      affinity:
+{{ toYaml . | indent 8 }}
+      {{- end }}
       {{ with .Values.proxy.initContainers -}}
       initContainers:
 {{ toYaml . | indent 6 }}{{ end }}
@@ -32,9 +37,37 @@ spec:
         - /usr/bin/kraken-proxy
         - --config={{ .Values.proxy.config }}
         - --port=80
+        - --server-port=10050
         volumeMounts:
         - name: config
           mountPath: /etc/config
+        ports:
+        - containerPort: 80
+          name: proxy
+        - containerPort: 10050
+          name: server-port
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: server-port
+          failureThreshold: 1
+          periodSeconds: 10
+        startupProbe:
+          httpGet:
+            path: /health
+            port: server-port
+          failureThreshold: 30
+          periodSeconds: 10
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: server-port
+          periodSeconds: 10
+          initialDelaySeconds: 5
+    {{- with .Values.kraken.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
 {{ with .Values.proxy.extraVolumeMounts }}{{ toYaml . | indent 8 }}{{ end }}
       volumes:
       - name: config
@@ -55,3 +88,27 @@ spec:
   - protocol: TCP
     port: 80
     targetPort: 80
+    name: proxy
+  - protocol: TCP
+    port: 10050
+    targetPort: 10050
+    name: server
+{{- if .Values.kraken.disruptionBudget.enabled }}
+---
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: kraken-proxy
+  labels:
+    app.kubernetes.io/name: kraken
+    app.kubernetes.io/component: proxy
+    app.kubernetes.io/instance: {{ .Release.Name }}
+spec:
+  minAvailable: {{ .Values.kraken.disruptionBudget.minAvaiable }}
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: kraken
+      app.kubernetes.io/component: proxy
+      app.kubernetes.io/instance: {{ .Release.Name }}
+{{- end }}
+{{- end }}

@@ -19,3 +19,7 @@ hashring:
 writeback:
   retry_interval: 100ms
   poll_retries_interval: 250ms
+
+{{ with .Values.origin.additionalConfig -}}
+{{ tpl . $ }}
+{{- end }}

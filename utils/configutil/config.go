@@ -58,8 +58,9 @@ import (
 	"errors"
 	"fmt"
 	"io/ioutil"
-	"path"
-	"path/filepath"
+
+	//"path"
+	//"path/filepath"
 
 	"github.com/uber/kraken/utils/stringset"
 
@@ -128,9 +129,9 @@ func resolveExtends(filename string, extendReader getExtend) ([]string, error) {
 		// If the file path of the extends field in the config is not absolute
 		// we assume that it is in the same directory as the current config
 		// file.
-		if !filepath.IsAbs(extends) {
-			extends = path.Join(filepath.Dir(filename), extends)
-		}
+		//if !filepath.IsAbs(extends) {
+		//	extends = path.Join(filepath.Dir(filename), extends)
+		//}
 
 		// Prevent circular references.
 		if seen.Has(extends) {

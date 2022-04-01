@@ -17,8 +17,13 @@ package config
 const BaseTemplate = `
 worker_processes 4;
 worker_rlimit_nofile 4096;
+{{if .is_windows}}
+pid C:/tmp/nginx.pid;
+{{else}}
 pid /tmp/nginx.pid;
+{{end}}
 user root root;
+error_log stderr;
 
 events {
   worker_connections 2048;
@@ -31,6 +36,8 @@ http {
   # Basic Settings
   ##
 
+  error_log stderr;
+  client_body_temp_path temp 2;
   sendfile on;
   tcp_nopush on;
   tcp_nodelay on;
@@ -41,7 +48,11 @@ http {
   # server_names_hash_bucket_size 64;
   # server_name_in_redirect off;
 
+  {{if .is_windows}}
+  include C:/etc/nginx/mime.types;
+  {{else}}
   include /etc/nginx/mime.types;
+  {{end}}
   default_type application/octet-stream;
 
   ##
@@ -137,7 +148,11 @@ http {
   # Virtual Host Configs
   ##
 
+  {{if .is_windows}}
+  include C:/etc/nginx/conf.d/*.conf;
+  {{else}}
   include /etc/nginx/conf.d/*.conf;
+  {{end}} 
 
   {{.site}}
 }

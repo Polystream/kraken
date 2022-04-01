@@ -42,6 +42,8 @@ func (c *LocalConfig) applyDefaults() {
 type RedisConfig struct {
 	Enabled           bool          `yaml:"enabled"`
 	Addr              string        `yaml:"addr"`
+	Password          string        `yaml:"password"`
+	DB                int           `yaml:"db"`
 	DialTimeout       time.Duration `yaml:"dial_timeout"`
 	ReadTimeout       time.Duration `yaml:"read_timeout"`
 	WriteTimeout      time.Duration `yaml:"write_timeout"`

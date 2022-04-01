@@ -1,4 +1,4 @@
-FROM mcr.microsoft.com/windows/nanoserver:20H2
+FROM mcr.microsoft.com/windows/servercore:20H2
 
 ARG NGINX_VERSION=1.21.6
 
@@ -8,9 +8,10 @@ RUN mkdir C:\nginx && \
     mkdir C:\etc && \
     curl -o "%TMP%\nginx-%NGINX_VERSION%.zip" "http://nginx.org/download/nginx-%NGINX_VERSION%.zip" && \
     tar -xf "%TMP%\nginx-%NGINX_VERSION%.zip" -C C:\nginx && \
-    copy "C:\nginx\nginx-%NGINX_VERSION%\nginx.exe" C:\usr\sbin\nginx && \
     xcopy "C:\nginx\nginx-%NGINX_VERSION%\conf" C:\etc\nginx /E /H /I && \
     del "%TMP%\nginx-%NGINX_VERSION%.zip"
+
+ENV NGINX_BINARY=C:\\nginx\\nginx-$NGINX_VERSION\\nginx.exe
 
 RUN mkdir C:\var\log\kraken\kraken-agent
 RUN mkdir C:\var\cache\kraken\kraken-agent

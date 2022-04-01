@@ -1,3 +1,4 @@
+{{- if .Values.tracker.enabled }}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -20,12 +21,18 @@ spec:
 {{ tpl . $ | indent 8 }}
       {{- end }}
     spec:
+      {{ with .Values.tracker.affinity -}}
+      affinity:
+{{ toYaml . | indent 8 }}
+      {{- end }}
       {{ with .Values.tracker.initContainers -}}
       initContainers:
 {{ tpl . $ | indent 6 }}{{- end }}
       containers:
+      {{- if not .Values.tracker.externalRedis.enabled }}
       - name: redis
         image: redis:5.0
+      {{- end }}
       - name: main
         image: {{ .Values.kraken.repository }}/kraken-tracker:{{ .Values.kraken.tag }}
         imagePullPolicy: {{ .Values.kraken.imagePullPolicy }}
@@ -36,6 +43,13 @@ spec:
         volumeMounts:
         - name: config
           mountPath: /etc/config
+        ports:
+        - containerPort: 80
+          name: tracker
+    {{- with .Values.kraken.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
 {{ with .Values.tracker.extraVolumeMounts }}{{ toYaml . | indent 8 }}{{ end }}
       volumes:
       - name: config
@@ -57,3 +71,22 @@ spec:
   - protocol: TCP
     port: 80
     targetPort: 80
+{{- if .Values.kraken.disruptionBudget.enabled }}
+---
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: kraken-tracker
+  labels:
+    app.kubernetes.io/name: kraken
+    app.kubernetes.io/component: tracker
+    app.kubernetes.io/instance: {{ .Release.Name }}
+spec:
+  minAvailable: {{ .Values.kraken.disruptionBudget.minAvaiable }}
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: kraken
+      app.kubernetes.io/component: tracker
+      app.kubernetes.io/instance: {{ .Release.Name }}
+{{- end }}
+{{- end }}

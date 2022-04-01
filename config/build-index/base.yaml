@@ -9,7 +9,7 @@ tag_store:
   write_through: true
 
 zap:
-  level: info
+  level: debug
   development: false
   encoding: console
   disableStacktrace: true

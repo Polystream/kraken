@@ -1,3 +1,4 @@
+{{- if .Values.agent.enabled }}
 apiVersion: apps/v1
 kind: DaemonSet
 metadata:
@@ -22,11 +23,15 @@ spec:
       {{ with .Values.agent.tolerations -}}
       tolerations:
 {{ toYaml . | indent 6 }}
-      {{- end -}}
+      {{- end }}
+      {{ with .Values.agent.affinity -}}
+      affinity:
+{{ toYaml . | indent 8 }}
+      {{- end }}
       {{ with .Values.agent.initContainers -}}
       initContainers:
 {{ toYaml . | indent 6 -}}
-      {{- end -}}
+      {{- end }}
       containers:
       - name: main
         image: {{ .Values.kraken.repository }}/kraken-agent:{{ .Values.kraken.tag }}
@@ -40,6 +45,35 @@ spec:
         volumeMounts:
         - name: config
           mountPath: /etc/config
+        ports:
+        - containerPort: 80
+          name: agent-server
+        - containerPort: 8080
+          name: peer
+        - containerPort: 8081
+          name: agent-registry
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: agent-server
+          failureThreshold: 1
+          periodSeconds: 10
+        startupProbe:
+          httpGet:
+            path: /health
+            port: agent-server
+          failureThreshold: 30
+          periodSeconds: 10
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: agent-server
+          periodSeconds: 10
+          initialDelaySeconds: 5
+    {{- with .Values.kraken.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
 {{ with .Values.agent.extraVolumeMounts }}{{ toYaml . | indent 8 }}{{ end }}
       volumes:
       - name: config
@@ -63,3 +97,5 @@ spec:
     targetPort: 8081
     nodePort: {{ .Values.kraken.registry_port }}
   externalTrafficPolicy: Local
+  internalTrafficPolicy: Local
+{{- end }}

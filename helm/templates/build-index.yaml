@@ -1,3 +1,4 @@
+{{- if .Values.build_index.enabled }}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -20,6 +21,10 @@ spec:
 {{ tpl . $ | indent 8 }}
       {{- end }}
     spec:
+      {{ with .Values.build_index.affinity -}}
+      affinity:
+{{ toYaml . | indent 8 }}
+      {{- end }}
       {{ with .Values.build_index.initContainers -}}
       initContainers:
 {{ toYaml . | indent 6 }}{{ end }}
@@ -34,6 +39,13 @@ spec:
         volumeMounts:
         - name: config
           mountPath: /etc/config
+        ports:
+        - containerPort: 80
+          name: build-index
+    {{- with .Values.kraken.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
 {{ with .Values.build_index.extraVolumeMounts }}{{ toYaml . | indent 8 }}{{ end }}
       volumes:
       - name: config
@@ -55,3 +67,22 @@ spec:
   - protocol: TCP
     port: 80
     targetPort: 80
+{{- if .Values.kraken.disruptionBudget.enabled }}
+---
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: kraken-build-index
+  labels:
+    app.kubernetes.io/name: kraken
+    app.kubernetes.io/component: build-index
+    app.kubernetes.io/instance: {{ .Release.Name }}
+spec:
+  minAvailable: {{ .Values.kraken.disruptionBudget.minAvaiable }}
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: kraken
+      app.kubernetes.io/component: build-index
+      app.kubernetes.io/instance: {{ .Release.Name }}
+{{- end }}
+{{- end }}
