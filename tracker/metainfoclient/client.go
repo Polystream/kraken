@@ -27,6 +27,7 @@ import (
 	"github.com/uber/kraken/core"
 	"github.com/uber/kraken/lib/hashring"
 	"github.com/uber/kraken/utils/httputil"
+	"github.com/uber/kraken/utils/log"
 )
 
 // Client errors.
@@ -55,6 +56,7 @@ func (c *client) Download(namespace string, d core.Digest) (*core.MetaInfo, erro
 	var resp *http.Response
 	var err error
 	for _, addr := range c.ring.Locations(d) {
+		log.Info(fmt.Sprintf("Metadata address: %s", addr))
 		resp, err = httputil.PollAccepted(
 			fmt.Sprintf(
 				"http://%s/namespace/%s/blobs/%s/metainfo",
