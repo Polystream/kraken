@@ -25,6 +25,9 @@ type Config struct {
 	// RefreshInterval is the interval at which membership / health information
 	// is refreshed during monitoring.
 	RefreshInterval time.Duration `yaml:"refresh_interval"`
+
+	// Skip validation of hash ring membership
+	SkipValidation bool `yaml:"skip_validation"`
 }
 
 func (c *Config) applyDefaults() {

@@ -243,18 +243,20 @@ func Run(flags *Flags, opts ...Option) {
 	go hashRing.Monitor(nil)
 
 	addr := fmt.Sprintf("%s:%d", hostname, flags.BlobServerPort)
-	if !hashRing.Contains(addr) {
-		// When DNS is used for hash ring membership, the members will be IP
-		// addresses instead of hostnames.
-		ip, err := netutil.GetLocalIP()
-		if err != nil {
-			log.Fatalf("Error getting local ip: %s", err)
-		}
-		addr = fmt.Sprintf("%s:%d", ip, flags.BlobServerPort)
+	if !config.HashRing.SkipValidation {
 		if !hashRing.Contains(addr) {
-			log.Fatalf(
-				"Neither %s nor %s (port %d) found in hash ring",
-				hostname, ip, flags.BlobServerPort)
+			// When DNS is used for hash ring membership, the members will be IP
+			// addresses instead of hostnames.
+			ip, err := netutil.GetLocalIP()
+			if err != nil {
+				log.Fatalf("Error getting local ip: %s", err)
+			}
+			addr = fmt.Sprintf("%s:%d", ip, flags.BlobServerPort)
+			if !hashRing.Contains(addr) {
+				log.Fatalf(
+					"Neither %s nor %s (port %d) found in hash ring",
+					hostname, ip, flags.BlobServerPort)
+			}
 		}
 	}
 

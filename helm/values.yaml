@@ -56,6 +56,7 @@ origin:
   extraVolumes:
   extraVolumeMounts:
   initContainers:
+  skipHashringValidation: false
 #  extraBackends: |-
 #    - namespace: library/.*
 #      backend:

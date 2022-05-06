@@ -15,6 +15,9 @@ backends:
 
 hashring:
   max_replica: 2
+  {{ if .Values.origin.skipHashringValidation }}
+  skip_validation: true
+  {{ end }}
 
 writeback:
   retry_interval: 100ms
