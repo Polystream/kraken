@@ -73,6 +73,7 @@ func (c *client) Download(namespace string, d core.Digest) (*core.MetaInfo, erro
 			httputil.SendTLS(c.tls))
 		if err != nil {
 			if httputil.IsNetworkError(err) {
+				log.Errorf("metadata network error: %s", err)
 				c.ring.Failed(addr)
 				continue
 			}
