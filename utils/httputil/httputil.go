@@ -293,6 +293,8 @@ func Send(method, rawurl string, options ...SendOption) (*http.Response, error) 
 		o(opts)
 	}
 
+	opts.transport.(*http.Transport).ResponseHeaderTimeout = 3 * time.Second
+
 	req, err := newRequest(method, opts)
 	if err != nil {
 		return nil, err
