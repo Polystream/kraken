@@ -77,7 +77,7 @@ func (c *client) Download(namespace string, d core.Digest) (*core.MetaInfo, erro
 				continue
 			}
 			if httputil.IsNotFound(err) {
-				return nil, ErrNotFound
+				continue
 			}
 			return nil, err
 		}
