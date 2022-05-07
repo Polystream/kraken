@@ -20,6 +20,7 @@ import (
 	"fmt"
 	"io"
 	"io/ioutil"
+	"net"
 	"net/http"
 	"net/url"
 	"time"
@@ -278,13 +279,27 @@ func Send(method, rawurl string, options ...SendOption) (*http.Response, error) 
 	if err != nil {
 		return nil, fmt.Errorf("parse url: %s", err)
 	}
+	rt := &http.Transport{
+		DialContext: (&net.Dialer{
+			Timeout:   10 * time.Second,
+			KeepAlive: 10 * time.Second,
+		}).DialContext,
+		TLSHandshakeTimeout: 10 * time.Second,
+
+		ExpectContinueTimeout: 4 * time.Second,
+		ResponseHeaderTimeout: 3 * time.Second,
+		Proxy:                 http.ProxyFromEnvironment,
+		ForceAttemptHTTP2:     true,
+		MaxIdleConns:          100,
+		IdleConnTimeout:       90 * time.Second,
+	}
 	opts := &sendOptions{
 		body:                 nil,
 		timeout:              60 * time.Second,
 		acceptedCodes:        map[int]bool{http.StatusOK: true},
 		headers:              map[string]string{},
 		retry:                retryOptions{backoff: &backoff.StopBackOff{}},
-		transport:            nil, // Use HTTP default.
+		transport:            rt, // Use HTTP default.
 		ctx:                  context.Background(),
 		url:                  u,
 		httpFallbackDisabled: false,
@@ -292,8 +307,6 @@ func Send(method, rawurl string, options ...SendOption) (*http.Response, error) 
 	for _, o := range options {
 		o(opts)
 	}
-
-	opts.transport.(*http.Transport).ResponseHeaderTimeout = 3 * time.Second
 
 	req, err := newRequest(method, opts)
 	if err != nil {
