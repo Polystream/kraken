@@ -37,6 +37,7 @@ func newPrometheusScope(config Config, cluster string) (tally.Scope, io.Closer, 
 	}
 	s, c := tally.NewRootScope(tally.ScopeOptions{
 		CachedReporter: r,
+		Prefix:         "kraken",
 	}, time.Second)
 	return s, c, nil
 }
