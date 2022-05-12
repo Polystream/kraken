@@ -36,6 +36,8 @@ scheduler:
 metrics:
   m3:
     service: kraken-origin
+  prometheus:
+    listen_address: 0.0.0.0:9000
 
 localdb:
   source: /var/cache/kraken/kraken-origin/origin.db

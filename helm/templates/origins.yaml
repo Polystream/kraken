@@ -44,6 +44,8 @@ spec:
           name: blobserver
         - containerPort: 8080
           name: peer
+        - containerPort: 9000
+          name: metrics
     {{- with .Values.kraken.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}

@@ -35,6 +35,8 @@ peerhandoutpolicy:
 metrics:
   m3:
     service: kraken
+  prometheus:
+    listen_address: 0.0.0.0:9000
 
 trackerserver:
   listener:

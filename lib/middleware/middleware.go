@@ -65,7 +65,7 @@ func LatencyTimer(stats tally.Scope) func(next http.Handler) http.Handler {
 		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 			start := time.Now()
 			next.ServeHTTP(w, r)
-			tagEndpoint(stats, r).Timer("latency").Record(time.Since(start))
+			tagEndpoint(stats, r).Timer("http_request_duration_seconds").Record(time.Since(start))
 		})
 	}
 }
@@ -95,7 +95,9 @@ func StatusCounter(stats tally.Scope) func(next http.Handler) http.Handler {
 		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 			recordw := &recordStatusWriter{w, false, http.StatusOK}
 			next.ServeHTTP(recordw, r)
-			tagEndpoint(stats, r).Counter(strconv.Itoa(recordw.code)).Inc(1)
+			tagEndpoint(stats, r).Tagged(map[string]string{
+				"code": strconv.Itoa(recordw.code),
+			}).Counter("http_requests_total").Inc(1)
 		})
 	}
 }

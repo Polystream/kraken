@@ -46,6 +46,8 @@ spec:
           name: proxy
         - containerPort: 10050
           name: server-port
+        - containerPort: 9000
+          name: metrics
         livenessProbe:
           httpGet:
             path: /health

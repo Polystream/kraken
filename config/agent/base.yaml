@@ -24,6 +24,8 @@ zap:
 metrics:
   m3:
     service: kraken-agent
+  prometheus:
+    listen_address: 0.0.0.0:9000
 
 scheduler:
   log:
