@@ -132,26 +132,22 @@ func Run(flags *Flags, opts ...Option) {
 
 	go metrics.EmitVersion(stats)
 
+	log.Info("1")
+
 	cas, err := store.NewCAStore(config.CAStore, stats)
 	if err != nil {
 		log.Fatalf("Failed to create store: %s", err)
 	}
-
-	log.Info("1")
 
 	tls, err := config.TLS.BuildClient()
 	if err != nil {
 		log.Fatalf("Error building client tls config: %s", err)
 	}
 
-	log.Info("2")
-
 	origins, err := config.Origin.Build(upstream.WithHealthCheck(healthcheck.Default(tls)))
 	if err != nil {
 		log.Fatalf("Error building origin host list: %s", err)
 	}
-
-	log.Info("3")
 
 	r := blobclient.NewClientResolver(blobclient.NewProvider(blobclient.WithTLS(tls)), origins)
 	originCluster := blobclient.NewClusterClient(r)
@@ -161,16 +157,12 @@ func Run(flags *Flags, opts ...Option) {
 		log.Fatalf("Error building build-index host list: %s", err)
 	}
 
-	log.Info("4")
-
 	tagClient := tagclient.NewClusterClient(buildIndexes, tls)
 
 	transferer := transfer.NewReadWriteTransferer(stats, tagClient, originCluster, cas)
 
 	// Open preheat function only if server-port was defined.
 	if flags.ServerPort != 0 {
-		log.Info("5")
-
 		server := proxyserver.New(stats, originCluster)
 		addr := fmt.Sprintf(":%d", flags.ServerPort)
 		log.Infof("Starting http server on %s", addr)

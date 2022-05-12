@@ -27,6 +27,7 @@ import (
 	"github.com/uber/kraken/core"
 	"github.com/uber/kraken/lib/hrw"
 	"github.com/uber/kraken/lib/store/base"
+	"github.com/uber/kraken/utils/log"
 )
 
 // CAStore allows uploading / caching content-addressable files.
@@ -42,9 +43,12 @@ type CAStore struct {
 func NewCAStore(config CAStoreConfig, stats tally.Scope) (*CAStore, error) {
 	config = config.applyDefaults()
 
+	log.Info("2")
 	stats = stats.Tagged(map[string]string{
 		"module": "castore",
 	})
+
+	log.Info("3")
 
 	uploadStore, err := newUploadStore(config.UploadDir)
 	if err != nil {
@@ -61,6 +65,7 @@ func NewCAStore(config CAStoreConfig, stats tally.Scope) (*CAStore, error) {
 		return nil, fmt.Errorf("init cas volumes: %s", err)
 	}
 
+	log.Info("4")
 	cleanup, err := newCleanupManager(clock.New(), stats)
 	if err != nil {
 		return nil, fmt.Errorf("new cleanup manager: %s", err)
