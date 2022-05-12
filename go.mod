@@ -35,6 +35,10 @@ require (
 	github.com/jmoiron/sqlx v0.0.0-20190319043955-cdf62fdf55f6
 	github.com/kardianos/osext v0.0.0-20190222173326-2bc1f35cddc0 // indirect
 	github.com/konsorten/go-windows-terminal-sequences v1.0.2 // indirect
+	github.com/m3db/prometheus_client_golang v0.8.1 // indirect
+	github.com/m3db/prometheus_client_model v0.1.0 // indirect
+	github.com/m3db/prometheus_common v0.1.0 // indirect
+	github.com/m3db/prometheus_procfs v0.8.1 // indirect
 	github.com/mattn/go-sqlite3 v1.14.0
 	github.com/opencontainers/go-digest v0.0.0-20190228220655-ac19fd6e7483
 	github.com/pressly/chi v4.0.2+incompatible
@@ -46,7 +50,8 @@ require (
 	github.com/spaolacci/murmur3 v0.0.0-20170819071325-9f5d223c6079
 	github.com/spf13/cobra v0.0.4 // indirect
 	github.com/stretchr/testify v1.4.0
-	github.com/uber-go/tally v3.3.11+incompatible
+	github.com/twmb/murmur3 v1.1.6 // indirect
+	github.com/uber-go/tally v3.4.3+incompatible
 	github.com/willf/bitset v0.0.0-20190228212526-18bd95f470f9
 	github.com/yuin/gopher-lua v0.0.0-20191128022950-c6266f4fe8d7 // indirect
 	github.com/yvasiyarov/go-metrics v0.0.0-20150112132944-c25f46c4b940 // indirect
