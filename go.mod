@@ -48,7 +48,8 @@ require (
 	github.com/spaolacci/murmur3 v0.0.0-20170819071325-9f5d223c6079
 	github.com/spf13/cobra v0.0.4 // indirect
 	github.com/stretchr/testify v1.4.0
-	github.com/uber-go/tally v3.3.11+incompatible
+	github.com/twmb/murmur3 v1.1.6 // indirect
+	github.com/uber-go/tally v3.4.3+incompatible
 	github.com/willf/bitset v0.0.0-20190228212526-18bd95f470f9
 	github.com/yuin/gopher-lua v0.0.0-20191128022950-c6266f4fe8d7 // indirect
 	github.com/yvasiyarov/go-metrics v0.0.0-20150112132944-c25f46c4b940 // indirect
