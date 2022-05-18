@@ -73,6 +73,7 @@ func NewCAStore(config CAStoreConfig, stats tally.Scope) (*CAStore, error) {
 	cleanup.addJob("upload", config.UploadCleanup, uploadStore.newFileOp())
 	cleanup.addJob("cache", config.CacheCleanup, cacheStore.newFileOp())
 
+	log.Info("5")
 	return &CAStore{config, uploadStore, cacheStore, cleanup}, nil
 }
 
