@@ -28,7 +28,7 @@ import (
 
 	"github.com/andres-erbsen/clock"
 	"github.com/c2h5oh/datasize"
-	"github.com/uber-go/tally"
+	"github.com/uber-go/tally/v4"
 )
 
 // Refresher errors.

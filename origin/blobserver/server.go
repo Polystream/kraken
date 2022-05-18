@@ -47,7 +47,7 @@ import (
 
 	"github.com/andres-erbsen/clock"
 	"github.com/pressly/chi"
-	"github.com/uber-go/tally"
+	"github.com/uber-go/tally/v4"
 )
 
 const _uploadChunkSize = 16 * memsize.MB

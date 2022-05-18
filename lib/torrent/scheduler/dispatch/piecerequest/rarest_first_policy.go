@@ -17,7 +17,7 @@ import (
 	"github.com/uber/kraken/utils/heap"
 	"github.com/uber/kraken/utils/syncutil"
 
-	"github.com/willf/bitset"
+	"github.com/bits-and-blooms/bitset"
 )
 
 // RarestFirstPolicy selects pieces that the fewest of our peers have to request first.

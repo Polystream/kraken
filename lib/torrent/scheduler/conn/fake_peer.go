@@ -9,7 +9,7 @@ import (
 	"github.com/uber/kraken/core"
 	"github.com/uber/kraken/utils/log"
 
-	"github.com/willf/bitset"
+	"github.com/bits-and-blooms/bitset"
 )
 
 // FakePeer is a testing utility which reciprocates handshakes against

@@ -20,7 +20,7 @@ import (
 
 	"github.com/pressly/chi"
 	chimiddleware "github.com/pressly/chi/middleware"
-	"github.com/uber-go/tally"
+	"github.com/uber-go/tally/v4"
 
 	"github.com/uber/kraken/lib/middleware"
 	"github.com/uber/kraken/origin/blobclient"

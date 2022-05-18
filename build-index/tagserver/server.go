@@ -43,7 +43,7 @@ import (
 
 	"github.com/pressly/chi"
 	chimiddleware "github.com/pressly/chi/middleware"
-	"github.com/uber-go/tally"
+	"github.com/uber-go/tally/v4"
 )
 
 // Server provides tag operations for the build-index.

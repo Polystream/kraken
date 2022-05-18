@@ -18,7 +18,7 @@ import (
 
 	"github.com/uber/kraken/utils/syncutil"
 
-	"github.com/willf/bitset"
+	"github.com/bits-and-blooms/bitset"
 )
 
 // DefaultPolicy randomly selects pieces to request.

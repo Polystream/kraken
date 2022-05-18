@@ -19,7 +19,7 @@ import (
 
 	"github.com/uber/kraken/core"
 
-	"github.com/willf/bitset"
+	"github.com/bits-and-blooms/bitset"
 )
 
 // ErrNotFound occurs when TorrentArchive cannot found a torrent.

@@ -33,7 +33,7 @@ import (
 	"github.com/uber/kraken/utils/log"
 	"github.com/uber/kraken/utils/netutil"
 
-	"github.com/uber-go/tally"
+	"github.com/uber-go/tally/v4"
 	"go.uber.org/zap"
 )
 

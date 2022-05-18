@@ -25,7 +25,7 @@ import (
 	"github.com/uber/kraken/lib/torrent/storage/piecereader"
 	"github.com/uber/kraken/utils/log"
 
-	"github.com/willf/bitset"
+	"github.com/bits-and-blooms/bitset"
 	"go.uber.org/atomic"
 )
 

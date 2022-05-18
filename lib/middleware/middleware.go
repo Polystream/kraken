@@ -20,7 +20,7 @@ import (
 	"time"
 
 	"github.com/pressly/chi"
-	"github.com/uber-go/tally"
+	"github.com/uber-go/tally/v4"
 )
 
 // tagEndpoint tags stats by endpoint path and method, ignoring any path variables.
