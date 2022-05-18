@@ -72,7 +72,6 @@ func newCleanupManager(clk clock.Clock, stats tally.Scope) (*cleanupManager, err
 // on the settings in config. op must set the desired states to clean before addJob
 // is called.
 func (m *cleanupManager) addJob(tag string, config CleanupConfig, op base.FileOp) {
-	log.Info("addJob 1")
 	config = config.applyDefaults()
 	if config.Disabled {
 		log.Warnf("Cleanup disabled for %s", op)
@@ -82,15 +81,9 @@ func (m *cleanupManager) addJob(tag string, config CleanupConfig, op base.FileOp
 		log.Warnf("TTL disabled for %s", op)
 	}
 
-	log.Info("addJob 2")
-
 	ticker := m.clk.Ticker(config.Interval)
 
-	log.Info("addJob 3")
-
 	usageGauge := m.stats.Tagged(map[string]string{"job": tag}).Gauge("disk_usage")
-
-	log.Info("addJob 4")
 
 	go func() {
 		for {
