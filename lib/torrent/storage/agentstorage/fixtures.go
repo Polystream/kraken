@@ -14,11 +14,11 @@
 package agentstorage
 
 import (
+	"github.com/uber-go/tally/v4"
 	"github.com/uber/kraken/core"
 	"github.com/uber/kraken/lib/store"
 	"github.com/uber/kraken/tracker/metainfoclient"
 	"github.com/uber/kraken/utils/testutil"
-	"github.com/uber-go/tally"
 )
 
 // TorrentArchiveFixture returns a TorrrentArchive for testing purposes.

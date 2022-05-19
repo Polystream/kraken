@@ -24,7 +24,7 @@ import (
 	"github.com/uber/kraken/utils/log"
 
 	"github.com/docker/distribution/uuid"
-	"github.com/uber-go/tally"
+	"github.com/uber-go/tally/v4"
 )
 
 // ReadWriteTransferer is a Transferer for proxy. Uploads/downloads blobs via the

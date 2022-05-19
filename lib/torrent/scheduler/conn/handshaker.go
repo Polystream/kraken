@@ -25,8 +25,8 @@ import (
 	"github.com/uber/kraken/utils/bandwidth"
 
 	"github.com/andres-erbsen/clock"
-	"github.com/uber-go/tally"
-	"github.com/willf/bitset"
+	"github.com/bits-and-blooms/bitset"
+	"github.com/uber-go/tally/v4"
 	"go.uber.org/zap"
 )
 

@@ -33,7 +33,7 @@ import (
 	"github.com/uber/kraken/utils/flagutil"
 	"github.com/uber/kraken/utils/log"
 
-	"github.com/uber-go/tally"
+	"github.com/uber-go/tally/v4"
 	"go.uber.org/zap"
 )
 
@@ -131,6 +131,8 @@ func Run(flags *Flags, opts ...Option) {
 	}
 
 	go metrics.EmitVersion(stats)
+
+	log.Info("1")
 
 	cas, err := store.NewCAStore(config.CAStore, stats)
 	if err != nil {

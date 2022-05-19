@@ -34,6 +34,8 @@ zap:
 metrics:
   m3:
     service: kraken-build-index
+  prometheus:
+    listen_address: 0.0.0.0:9000
 
 tagserver:
   listener:

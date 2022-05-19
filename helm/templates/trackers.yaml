@@ -46,6 +46,8 @@ spec:
         ports:
         - containerPort: 80
           name: tracker
+        - containerPort: 9000
+          name: metrics
     {{- with .Values.kraken.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}

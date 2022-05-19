@@ -11,25 +11,32 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-package trackerserver
+package metrics
 
 import (
+	"fmt"
+	"io"
 	"time"
 
 	"github.com/uber-go/tally/v4"
-
-	"github.com/uber/kraken/tracker/originstore"
-	"github.com/uber/kraken/tracker/peerhandoutpolicy"
-	"github.com/uber/kraken/tracker/peerstore"
+	promreporter "github.com/uber-go/tally/v4/prometheus"
 )
 
-// Fixture is a test utility which returns a tracker server with in-memory storage.
-func Fixture() *Server {
-	policy := peerhandoutpolicy.DefaultPriorityPolicyFixture()
-	config := Config{
-		AnnounceInterval: 250 * time.Millisecond,
+func newPrometheusScope(config Config, cluster string) (tally.Scope, io.Closer, error) {
+	if config.Prometheus.ListenAddress == "" {
+		return nil, nil, fmt.Errorf("listen_address required for prometheus")
 	}
-	return New(
-		config, tally.NoopScope, policy,
-		peerstore.NewTestStore(), originstore.NewNoopStore(), nil)
+
+	prometheusConfig := promreporter.Configuration{
+		HandlerPath:   config.Prometheus.HandlerPath,
+		ListenAddress: config.Prometheus.ListenAddress,
+	}
+	r, err := prometheusConfig.NewReporter(promreporter.ConfigurationOptions{})
+	if err != nil {
+		return nil, nil, err
+	}
+	s, c := tally.NewRootScope(tally.ScopeOptions{
+		CachedReporter: r,
+	}, time.Second)
+	return s, c, nil
 }

@@ -13,7 +13,7 @@
 // limitations under the License.
 package bitsetutil
 
-import "github.com/willf/bitset"
+import "github.com/bits-and-blooms/bitset"
 
 // FromBools returns a new BitSet from the given bools.
 func FromBools(bs ...bool) *bitset.BitSet {

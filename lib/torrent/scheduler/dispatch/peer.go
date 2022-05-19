@@ -17,9 +17,9 @@ import (
 	"sync"
 	"time"
 
-	"github.com/uber/kraken/core"
 	"github.com/andres-erbsen/clock"
-	"github.com/willf/bitset"
+	"github.com/bits-and-blooms/bitset"
+	"github.com/uber/kraken/core"
 )
 
 // peer consolidates bookeeping for a remote peer.
@@ -92,9 +92,9 @@ func (p *peer) touchLastPieceSent() {
 // peerStats wraps stats collected for a given peer.
 type peerStats struct {
 	mu                    sync.Mutex
-	pieceRequestsSent       int // Pieces we requested from the peer.
-	pieceRequestsReceived   int // Pieces the peer requested from us.
-	piecesSent              int // Pieces we sent to the peer.
+	pieceRequestsSent     int // Pieces we requested from the peer.
+	pieceRequestsReceived int // Pieces the peer requested from us.
+	piecesSent            int // Pieces we sent to the peer.
 
 	// Pieces we received from the peer that we didn't already have.
 	goodPiecesReceived int
