@@ -26,7 +26,7 @@ type: Opaque
 metadata:
   name: kraken-agent
 data:
-  secrets.yaml: {{ tpl .Values.agent.secretConfig . | toYaml | indent 2 }}
+  secrets.yaml: {{ tpl .Values.agent.secretConfig . | toYaml | indent 2 | b64enc }}
 {{- end }}
 {{- if and .Values.build_index.enabled .Values.build_index.secretConfig }}
 ---
@@ -36,7 +36,7 @@ type: Opaque
 metadata:
   name: kraken-build-index
 data:
-  secrets.yaml: {{ tpl .Values.build_index.secretConfig . | toYaml | indent 2 }}
+  secrets.yaml: {{ tpl .Values.build_index.secretConfig . | toYaml | indent 2 | b64enc }}
 {{- end }}
 {{- if and .Values.origin.enabled .Values.origin.secretConfig }}
 ---
@@ -46,7 +46,7 @@ type: Opaque
 metadata:
   name: kraken-origin
 data:
-  secrets.yaml: {{ tpl .Values.origin.secretConfig . | toYaml | indent 2 }}
+  secrets.yaml: {{ tpl .Values.origin.secretConfig . | toYaml | indent 2 | b64enc }}
 {{- end }}
 {{- if and .Values.proxy.enabled .Values.proxy.secretConfig }}
 ---
@@ -56,7 +56,7 @@ type: Opaque
 metadata:
   name: kraken-proxy
 data:
-  secrets.yaml: {{ tpl .Values.proxy.secretConfig . | toYaml | indent 2 }}
+  secrets.yaml: {{ tpl .Values.proxy.secretConfig . | toYaml | indent 2 | b64enc }}
 {{- end }}
 {{- if and .Values.tracker.enabled .Values.tracker.secretConfig }}
 ---
@@ -66,5 +66,5 @@ type: Opaque
 metadata:
   name: kraken-tracker
 data:
-  secrets.yaml: {{ tpl .Values.tracker.secretConfig . | toYaml | indent 2 }}
+  secrets.yaml: {{ tpl .Values.tracker.secretConfig . | toYaml | indent 2 | b64enc }}
 {{- end }}
