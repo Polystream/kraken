@@ -6,6 +6,8 @@ kraken:
   disruptionBudget:
     enabled: true
     minAvaiable: 50%
+  cluster: ""
+  zone: ""
 
 tracker:
   enabled: true
