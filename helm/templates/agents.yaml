@@ -42,9 +42,18 @@ spec:
         - --agent-server-port=80
         - --peer-port=8080
         - --agent-registry-port=8081
+        - --cluster={{ .Values.kraken.cluster }}
+        - --zone={{ .Values.kraken.zone }}
+        {{- if .Values.agent.secretConfig }}      
+        - --secrets=/etc/secrets/secrets.yaml
+        {{- end }}
         volumeMounts:
         - name: config
           mountPath: /etc/config
+        {{- if .Values.agent.secretConfig }}      
+        - name: secret
+          mountPath: /etc/secrets
+        {{- end }}
         ports:
         - containerPort: 80
           name: agent-server
@@ -81,6 +90,11 @@ spec:
       - name: config
         configMap:
           name: kraken
+      {{- if .Values.agent.secretConfig }}      
+      - name: secret
+        secret:
+          secretName: kraken-agent
+      {{- end }}
 {{ with .Values.agent.extraVolumes }}{{ toYaml . | indent 6 }}{{ end }}
 ---
 kind: Service

@@ -38,9 +38,17 @@ spec:
         - --config={{ .Values.proxy.config }}
         - --port=80
         - --server-port=10050
+        - --cluster={{ .Values.kraken.cluster }}
+        {{- if .Values.proxy.secretConfig }}      
+        - --secrets=/etc/secrets/secrets.yaml
+        {{- end }}
         volumeMounts:
         - name: config
           mountPath: /etc/config
+        {{- if .Values.proxy.secretConfig }}      
+        - name: secret
+          mountPath: /etc/secrets
+        {{- end }}
         ports:
         - containerPort: 80
           name: proxy
@@ -75,6 +83,11 @@ spec:
       - name: config
         configMap:
           name: kraken
+      {{- if .Values.proxy.secretConfig }}      
+      - name: secret
+        secret:
+          secretName: kraken-proxy
+      {{- end }}
 {{ with .Values.proxy.extraVolumes }}{{ toYaml . | indent 6 }}{{ end }}
 ---
 kind: Service

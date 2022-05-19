@@ -18,3 +18,53 @@ data:
   {{- if .Values.tracker.enabled }}
   tracker.yaml: {{ tpl (.Files.Get "config/tracker.yaml") . | toYaml | indent 2 }}
   {{- end }}
+{{- if and .Values.agent.enabled .Values.agent.secretConfig }}
+---
+apiVersion: v1
+kind: Secret
+type: Opaque
+metadata:
+  name: kraken-agent
+data:
+  secrets.yaml: {{ tpl .Values.agent.secretConfig . | b64enc }}
+{{- end }}
+{{- if and .Values.build_index.enabled .Values.build_index.secretConfig }}
+---
+apiVersion: v1
+kind: Secret
+type: Opaque
+metadata:
+  name: kraken-build-index
+data:
+  secrets.yaml: {{ tpl .Values.build_index.secretConfig . | b64enc }}
+{{- end }}
+{{- if and .Values.origin.enabled .Values.origin.secretConfig }}
+---
+apiVersion: v1
+kind: Secret
+type: Opaque
+metadata:
+  name: kraken-origin
+data:
+  secrets.yaml: {{ tpl .Values.origin.secretConfig . | b64enc }}
+{{- end }}
+{{- if and .Values.proxy.enabled .Values.proxy.secretConfig }}
+---
+apiVersion: v1
+kind: Secret
+type: Opaque
+metadata:
+  name: kraken-proxy
+data:
+  secrets.yaml: {{ tpl .Values.proxy.secretConfig . | b64enc }}
+{{- end }}
+{{- if and .Values.tracker.enabled .Values.tracker.secretConfig }}
+---
+apiVersion: v1
+kind: Secret
+type: Opaque
+metadata:
+  name: kraken-tracker
+data:
+  secrets.yaml: {{ tpl .Values.tracker.secretConfig . | b64enc }}
+{{- end }}

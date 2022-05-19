@@ -35,10 +35,14 @@ spec:
         command:
         - /bin/bash
         - -c
-        - "sleep 30 && /usr/bin/kraken-origin --config={{ .Values.origin.config }} --blobserver-port=80 --peer-port=8080"
+        - "sleep 30 && /usr/bin/kraken-origin --config={{ .Values.origin.config }} --blobserver-port=80 --peer-port=8080 --cluster={{ .Values.kraken.cluster }} --zone={{ .Values.kraken.zone }}{{if .Values.origin.secretConfig}} --secrets=/etc/secrets/secrets.yaml{{end}}"
         volumeMounts:
         - name: config
           mountPath: /etc/config
+        {{- if .Values.origin.secretConfig }}      
+        - name: secret
+          mountPath: /etc/secrets
+        {{- end }}
         ports:
         - containerPort: 80
           name: blobserver
@@ -55,6 +59,11 @@ spec:
       - name: config
         configMap:
           name: kraken
+      {{- if .Values.origin.secretConfig }}      
+      - name: secret
+        secret:
+          secretName: kraken-origin
+      {{- end }}
 {{ with .Values.origin.extraVolumes }}{{ toYaml . | indent 6 }}{{ end }}
 ---
 kind: Service
