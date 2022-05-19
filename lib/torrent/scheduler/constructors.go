@@ -28,7 +28,7 @@ import (
 	"github.com/uber/kraken/tracker/announceclient"
 	"github.com/uber/kraken/tracker/metainfoclient"
 
-	"github.com/uber-go/tally"
+	"github.com/uber-go/tally/v4"
 )
 
 // NewAgentScheduler creates and starts a ReloadableScheduler configured for an agent.

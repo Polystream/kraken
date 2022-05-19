@@ -14,12 +14,12 @@
 package dockerregistry
 
 import (
-	"github.com/uber/kraken/lib/dockerregistry/transfer"
-	"github.com/uber/kraken/lib/store"
 	"github.com/docker/distribution/configuration"
 	"github.com/docker/distribution/context"
 	"github.com/docker/distribution/registry"
-	"github.com/uber-go/tally"
+	"github.com/uber-go/tally/v4"
+	"github.com/uber/kraken/lib/dockerregistry/transfer"
+	"github.com/uber/kraken/lib/store"
 )
 
 const (

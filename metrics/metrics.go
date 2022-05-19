@@ -22,13 +22,14 @@ import (
 
 	"github.com/uber/kraken/utils/log"
 
-	"github.com/uber-go/tally"
+	"github.com/uber-go/tally/v4"
 )
 
 func init() {
 	register("statsd", newStatsdScope)
 	register("disabled", newDisabledScope)
 	register("m3", newM3Scope)
+	register("prometheus", newPrometheusScope)
 }
 
 var _scopeFactories = make(map[string]scopeFactory)

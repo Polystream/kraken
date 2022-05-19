@@ -25,7 +25,7 @@ import (
 	"github.com/uber/kraken/utils/memsize"
 	"github.com/uber/kraken/utils/timeutil"
 
-	"github.com/willf/bitset"
+	"github.com/bits-and-blooms/bitset"
 )
 
 // event describes an external event which modifies state. While the event is

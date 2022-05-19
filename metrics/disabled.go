@@ -17,7 +17,7 @@ import (
 	"io"
 	"time"
 
-	"github.com/uber-go/tally"
+	"github.com/uber-go/tally/v4"
 )
 
 func newDisabledScope(Config, string) (tally.Scope, io.Closer, error) {

@@ -16,8 +16,8 @@ package scheduler
 import (
 	"time"
 
+	"github.com/uber-go/tally/v4"
 	"github.com/uber/kraken/utils/memsize"
-	"github.com/uber-go/tally"
 )
 
 type bucket struct {

@@ -23,7 +23,7 @@ import (
 	"github.com/uber/kraken/utils/syncutil"
 
 	"github.com/andres-erbsen/clock"
-	"github.com/willf/bitset"
+	"github.com/bits-and-blooms/bitset"
 )
 
 // Status enumerates possible statuses of a Request.

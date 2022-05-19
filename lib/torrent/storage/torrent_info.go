@@ -16,7 +16,7 @@ package storage
 import (
 	"github.com/uber/kraken/core"
 
-	"github.com/willf/bitset"
+	"github.com/bits-and-blooms/bitset"
 )
 
 // TorrentInfo encapsulates read-only torrent information.

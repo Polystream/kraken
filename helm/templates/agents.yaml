@@ -61,6 +61,8 @@ spec:
           name: peer
         - containerPort: 8081
           name: agent-registry
+        - containerPort: 9000
+          name: metrics
         livenessProbe:
           httpGet:
             path: /health

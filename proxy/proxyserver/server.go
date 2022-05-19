@@ -19,7 +19,7 @@ import (
 	_ "net/http/pprof" // Registers /debug/pprof endpoints in http.DefaultServeMux.
 
 	"github.com/pressly/chi"
-	"github.com/uber-go/tally"
+	"github.com/uber-go/tally/v4"
 	"github.com/uber/kraken/lib/middleware"
 	"github.com/uber/kraken/origin/blobclient"
 	"github.com/uber/kraken/utils/handler"

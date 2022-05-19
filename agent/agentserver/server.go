@@ -33,7 +33,7 @@ import (
 	"github.com/uber/kraken/utils/httputil"
 
 	"github.com/pressly/chi"
-	"github.com/uber-go/tally"
+	"github.com/uber-go/tally/v4"
 )
 
 // Config defines Server configuration.

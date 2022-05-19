@@ -25,7 +25,7 @@ import (
 
 	"github.com/pressly/chi"
 	"github.com/stretchr/testify/require"
-	"github.com/uber-go/tally"
+	"github.com/uber-go/tally/v4"
 )
 
 func TestScopeByEndpoint(t *testing.T) {
@@ -92,7 +92,7 @@ func TestLatencyTimer(t *testing.T) {
 
 	require.Equal(1, len(stats.Snapshot().Timers()))
 	for _, v := range stats.Snapshot().Timers() {
-		require.Equal("latency", v.Name())
+		require.Equal("http_request_duration_seconds", v.Name())
 		require.WithinDuration(now, now.Add(v.Values()[0]), 500*time.Millisecond)
 		require.Equal(map[string]string{
 			"endpoint": "foo",
@@ -145,11 +145,12 @@ func TestStatusCounter(t *testing.T) {
 
 			require.Equal(1, len(stats.Snapshot().Counters()))
 			for _, v := range stats.Snapshot().Counters() {
-				require.Equal(test.expectedStatus, v.Name())
+				require.Equal("http_requests_total", v.Name())
 				require.Equal(int64(5), v.Value())
 				require.Equal(map[string]string{
 					"endpoint": "foo",
 					"method":   "GET",
+					"code":     test.expectedStatus
 				}, v.Tags())
 			}
 		})

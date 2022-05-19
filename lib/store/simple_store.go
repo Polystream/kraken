@@ -18,10 +18,10 @@ import (
 	"io"
 	"os"
 
-	"github.com/uber/kraken/lib/store/base"
 	"github.com/andres-erbsen/clock"
 	"github.com/docker/distribution/uuid"
-	"github.com/uber-go/tally"
+	"github.com/uber-go/tally/v4"
+	"github.com/uber/kraken/lib/store/base"
 )
 
 // SimpleStore allows uploading / caching raw files of any format.

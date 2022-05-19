@@ -29,8 +29,8 @@ import (
 	"github.com/uber/kraken/utils/syncutil"
 
 	"github.com/andres-erbsen/clock"
-	"github.com/uber-go/tally"
-	"github.com/willf/bitset"
+	"github.com/bits-and-blooms/bitset"
+	"github.com/uber-go/tally/v4"
 	"go.uber.org/zap"
 	"golang.org/x/sync/syncmap"
 )
@@ -336,9 +336,9 @@ func (d *Dispatcher) complete() {
 		requested := pstats.getPieceRequestsSent()
 		piecesRequestedTotal += requested
 		summary := torrentlog.SeederSummary{
-			PeerID:         peerID,
-			RequestsSent:   requested,
-			GoodPiecesReceived: pstats.getGoodPiecesReceived(),
+			PeerID:                  peerID,
+			RequestsSent:            requested,
+			GoodPiecesReceived:      pstats.getGoodPiecesReceived(),
 			DuplicatePiecesReceived: pstats.getDuplicatePiecesReceived(),
 		}
 		summaries = append(summaries, summary)
@@ -384,8 +384,8 @@ func (d *Dispatcher) maybeSendPieceRequests(p *peer, candidates *bitset.BitSet) 
 		}
 		d.netevents.Produce(
 			networkevent.RequestPieceEvent(d.torrent.InfoHash(), d.localPeerID, p.id, i))
-			p.pstats.incrementPieceRequestsSent()
-		}
+		p.pstats.incrementPieceRequestsSent()
+	}
 	return true, nil
 }
 

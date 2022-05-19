@@ -26,7 +26,7 @@ import (
 	"github.com/uber/kraken/lib/torrent/storage"
 	"go.uber.org/zap"
 
-	"github.com/willf/bitset"
+	"github.com/bits-and-blooms/bitset"
 )
 
 // torrentControl bundles torrent control structures.

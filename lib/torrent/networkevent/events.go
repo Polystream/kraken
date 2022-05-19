@@ -20,7 +20,7 @@ import (
 	"github.com/uber/kraken/core"
 	"github.com/uber/kraken/utils/log"
 
-	"github.com/willf/bitset"
+	"github.com/bits-and-blooms/bitset"
 )
 
 // Name defines event names.
