@@ -35,7 +35,7 @@ spec:
         command:
         - /bin/bash
         - -c
-        - "sleep 30 && /usr/bin/kraken-build-index --config={{ .Values.build_index.config }} --port=80 --cluster={{ .Values.kraken.cluster }}{{if .Values.agent.secretConfig}} --secrets=/etc/secrets/secrets.yaml{{end}}"
+        - "sleep 30 && /usr/bin/kraken-build-index --config={{ .Values.build_index.config }} --port=80 --cluster={{ .Values.kraken.cluster }}{{if .Values.build_index.secretConfig}} --secrets=/etc/secrets/secrets.yaml{{end}}"
         volumeMounts:
         - name: config
           mountPath: /etc/config
