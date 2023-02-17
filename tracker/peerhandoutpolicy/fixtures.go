@@ -13,7 +13,7 @@
 // limitations under the License.
 package peerhandoutpolicy
 
-import "github.com/uber-go/tally/v4"
+import "github.com/uber-go/tally"
 
 // DefaultPriorityPolicyFixture returns the default peer handout policy for testing purposes.
 func DefaultPriorityPolicyFixture() *PriorityPolicy {

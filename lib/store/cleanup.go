@@ -25,7 +25,7 @@ import (
 	"github.com/uber/kraken/utils/log"
 
 	"github.com/andres-erbsen/clock"
-	"github.com/uber-go/tally/v4"
+	"github.com/uber-go/tally"
 )
 
 // CleanupConfig defines configuration for periodically cleaning up idle files.

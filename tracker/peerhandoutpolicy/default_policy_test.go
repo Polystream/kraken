@@ -19,7 +19,7 @@ import (
 	"github.com/uber/kraken/core"
 
 	"github.com/stretchr/testify/require"
-	"github.com/uber-go/tally/v4"
+	"github.com/uber-go/tally"
 )
 
 func TestDefaultPriorityPolicy(t *testing.T) {

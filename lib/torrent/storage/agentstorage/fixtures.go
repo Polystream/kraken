@@ -14,7 +14,7 @@
 package agentstorage
 
 import (
-	"github.com/uber-go/tally/v4"
+	"github.com/uber-go/tally"
 	"github.com/uber/kraken/core"
 	"github.com/uber/kraken/lib/store"
 	"github.com/uber/kraken/tracker/metainfoclient"

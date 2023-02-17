@@ -18,7 +18,7 @@ import (
 	"os"
 
 	"github.com/andres-erbsen/clock"
-	"github.com/uber-go/tally/v4"
+	"github.com/uber-go/tally"
 	"github.com/uber/kraken/lib/store/base"
 	"github.com/uber/kraken/lib/store/metadata"
 )

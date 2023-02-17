@@ -17,7 +17,7 @@ import (
 	"github.com/uber/kraken/lib/dockerregistry/transfer"
 	"github.com/uber/kraken/lib/store"
 
-	"github.com/uber-go/tally/v4"
+	"github.com/uber-go/tally"
 )
 
 // StorageDriverFixture creates a storage driver for testing purposes.

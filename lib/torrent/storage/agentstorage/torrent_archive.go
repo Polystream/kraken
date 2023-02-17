@@ -18,7 +18,7 @@ import (
 	"os"
 
 	"github.com/bits-and-blooms/bitset"
-	"github.com/uber-go/tally/v4"
+	"github.com/uber-go/tally"
 
 	"github.com/uber/kraken/core"
 	"github.com/uber/kraken/lib/store"

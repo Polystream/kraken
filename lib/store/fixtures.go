@@ -19,7 +19,7 @@ import (
 
 	"github.com/uber/kraken/utils/testutil"
 
-	"github.com/uber-go/tally/v4"
+	"github.com/uber-go/tally"
 )
 
 func tempdir(cleanup *testutil.Cleanup, name string) string {

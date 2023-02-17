@@ -26,7 +26,7 @@ import (
 
 	"github.com/docker/distribution/registry/storage/driver"
 	"github.com/docker/distribution/registry/storage/driver/factory"
-	"github.com/uber-go/tally/v4"
+	"github.com/uber-go/tally"
 )
 
 // The path layout in the storage backend is roughly as follows:

@@ -29,7 +29,7 @@ import (
 	"github.com/uber/kraken/lib/store"
 	"github.com/uber/kraken/lib/store/metadata"
 
-	"github.com/uber-go/tally/v4"
+	"github.com/uber-go/tally"
 )
 
 // Store errors.

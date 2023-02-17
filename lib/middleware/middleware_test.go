@@ -25,7 +25,7 @@ import (
 
 	"github.com/go-chi/chi"
 	"github.com/stretchr/testify/require"
-	"github.com/uber-go/tally/v4"
+	"github.com/uber-go/tally"
 )
 
 func TestScopeByEndpoint(t *testing.T) {
