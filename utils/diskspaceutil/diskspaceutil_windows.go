@@ -1,6 +1,3 @@
-//go:build !windows
-// +build !windows
-
 // Copyright (c) 2016-2019 Uber Technologies, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -18,21 +15,35 @@ package diskspaceutil
 
 import (
 	"syscall"
+	"unsafe"
 )
 
 const path = "/"
 
 // Helper method to get disk util.
 func DiskSpaceUtil() (int, error) {
-	fs := syscall.Statfs_t{}
-	err := syscall.Statfs(path, &fs)
+	h := syscall.MustLoadDLL("kernel32.dll")
+	c := h.MustFindProc("GetDiskFreeSpaceExW")
+
+	var freeBytes int64
+	var totalBytes int64
+	var availBytes int64
+
+	p, err := syscall.UTF16PtrFromString(path)
 	if err != nil {
 		return 0, err
 	}
 
-	diskAll := fs.Blocks * uint64(fs.Bsize)
-	diskFree := fs.Bfree * uint64(fs.Bsize)
-	diskUsed := diskAll - diskFree
-	return int(diskUsed * 100 / diskAll), nil
+	result, _, err := c.Call(uintptr(unsafe.Pointer(p)),
+		uintptr(unsafe.Pointer(&freeBytes)),
+		uintptr(unsafe.Pointer(&totalBytes)),
+		uintptr(unsafe.Pointer(&availBytes)))
+
+	if result != 0 {
+		return 0, err
+	}
+
+	diskUsed := totalBytes - freeBytes
+	return int(diskUsed * 100 / totalBytes), nil
 
 }
