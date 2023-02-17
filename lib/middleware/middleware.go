@@ -19,8 +19,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/pressly/chi"
-	"github.com/uber-go/tally/v4"
+	"github.com/go-chi/chi"
+	"github.com/uber-go/tally"
 )
 
 // tagEndpoint tags stats by endpoint path and method, ignoring any path variables.

@@ -25,7 +25,7 @@ import (
 	"time"
 
 	"github.com/cenkalti/backoff"
-	"github.com/pressly/chi"
+	"github.com/go-chi/chi"
 
 	"github.com/uber/kraken/core"
 	"github.com/uber/kraken/utils/handler"
@@ -287,7 +287,7 @@ func Send(method, rawurl string, options ...SendOption) (*http.Response, error) 
 		transport:            nil, // Use HTTP default.
 		ctx:                  context.Background(),
 		url:                  u,
-		httpFallbackDisabled: false,
+		httpFallbackDisabled: true,
 	}
 	for _, o := range options {
 		o(opts)

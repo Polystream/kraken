@@ -25,15 +25,15 @@ import (
 
 	"github.com/uber/kraken/build-index/tagclient"
 	"github.com/uber/kraken/core"
-	"github.com/uber/kraken/lib/dockerdaemon"
+	"github.com/uber/kraken/lib/containerruntime"
 	"github.com/uber/kraken/lib/middleware"
 	"github.com/uber/kraken/lib/store"
 	"github.com/uber/kraken/lib/torrent/scheduler"
 	"github.com/uber/kraken/utils/handler"
 	"github.com/uber/kraken/utils/httputil"
 
-	"github.com/pressly/chi"
-	"github.com/uber-go/tally/v4"
+	"github.com/go-chi/chi"
+	"github.com/uber-go/tally"
 )
 
 // Config defines Server configuration.
@@ -41,12 +41,12 @@ type Config struct{}
 
 // Server defines the agent HTTP server.
 type Server struct {
-	config    Config
-	stats     tally.Scope
-	cads      *store.CADownloadStore
-	sched     scheduler.ReloadableScheduler
-	tags      tagclient.Client
-	dockerCli dockerdaemon.DockerClient
+	config           Config
+	stats            tally.Scope
+	cads             *store.CADownloadStore
+	sched            scheduler.ReloadableScheduler
+	tags             tagclient.Client
+	containerRuntime containerruntime.Factory
 }
 
 // New creates a new Server.
@@ -56,13 +56,13 @@ func New(
 	cads *store.CADownloadStore,
 	sched scheduler.ReloadableScheduler,
 	tags tagclient.Client,
-	dockerCli dockerdaemon.DockerClient) *Server {
+	containerRuntime containerruntime.Factory) *Server {
 
 	stats = stats.Tagged(map[string]string{
 		"module": "agentserver",
 	})
 
-	return &Server{config, stats, cads, sched, tags, dockerCli}
+	return &Server{config, stats, cads, sched, tags, containerRuntime}
 }
 
 // Handler returns the HTTP handler.
@@ -166,10 +166,22 @@ func (s *Server) preloadTagHandler(w http.ResponseWriter, r *http.Request) error
 		return handler.Errorf("failed to parse docker image tag")
 	}
 	repo, tag := parts[0], parts[1]
-	if err := s.dockerCli.PullImage(
-		context.Background(), repo, tag); err != nil {
 
-		return handler.Errorf("trigger docker pull: %s", err)
+	rt := httputil.GetQueryArg(r, "runtime", "docker")
+	ns := httputil.GetQueryArg(r, "namespace", "")
+	switch rt {
+	case "docker":
+		if err := s.containerRuntime.DockerClient().
+			PullImage(context.Background(), repo, tag); err != nil {
+			return handler.Errorf("docker pull: %s", err)
+		}
+	case "containerd":
+		if err := s.containerRuntime.ContainerdClient().
+			PullImage(context.Background(), ns, repo, tag); err != nil {
+			return handler.Errorf("containerd pull: %s", err)
+		}
+	default:
+		return handler.Errorf("unsupported container runtime")
 	}
 	return nil
 }
@@ -178,7 +190,7 @@ func (s *Server) healthHandler(w http.ResponseWriter, r *http.Request) error {
 	if err := s.sched.Probe(); err != nil {
 		return handler.Errorf("probe torrent client: %s", err)
 	}
-	fmt.Fprintln(w, "OK")
+	io.WriteString(w, "OK")
 	return nil
 }
 

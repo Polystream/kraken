@@ -3,7 +3,8 @@ module github.com/uber/kraken
 go 1.17
 
 require (
-	cloud.google.com/go v0.43.0
+	cloud.google.com/go/storage v1.6.0
+	github.com/Microsoft/hcsshim v0.9.3 // indirect
 	github.com/alecthomas/kingpin v2.2.6+incompatible
 	github.com/alicebob/miniredis v2.5.0+incompatible
 	github.com/andres-erbsen/clock v0.0.0-20160526145045-9e14626cd129
@@ -13,19 +14,23 @@ require (
 	github.com/c2h5oh/datasize v0.0.0-20171227191756-4eba002a5eae
 	github.com/cactus/go-statsd-client v3.1.1+incompatible
 	github.com/cenkalti/backoff v2.2.1+incompatible
-	github.com/docker/distribution v0.0.0-20191024225408-dee21c0394b5
+	github.com/containerd/cgroups v1.0.4 // indirect
+	github.com/containerd/containerd v1.5.7
+	github.com/containerd/continuity v0.0.0-00010101000000-000000000000 // indirect
+	github.com/containerd/fifo v1.0.0 // indirect
+	github.com/docker/distribution v2.7.1+incompatible
 	github.com/docker/docker-credential-helpers v0.6.3
 	github.com/docker/engine-api v0.0.0-20160908232104-4290f40c0566
 	github.com/garyburd/redigo v1.6.0
 	github.com/golang/mock v1.4.4
 	github.com/golang/protobuf v1.4.3
 	github.com/gorilla/mux v1.7.3
+	github.com/imdario/mergo v0.3.13 // indirect
 	github.com/jackpal/bencode-go v0.0.0-20180813173944-227668e840fa
 	github.com/jinzhu/gorm v1.9.16
 	github.com/jmoiron/sqlx v0.0.0-20190319043955-cdf62fdf55f6
 	github.com/mattn/go-sqlite3 v1.14.0
-	github.com/opencontainers/go-digest v0.0.0-20190228220655-ac19fd6e7483
-	github.com/pressly/chi v4.0.2+incompatible
+	github.com/opencontainers/go-digest v1.0.0
 	github.com/pressly/goose v2.6.0+incompatible
 	github.com/satori/go.uuid v1.2.0
 	github.com/spaolacci/murmur3 v0.0.0-20170819071325-9f5d223c6079
@@ -101,3 +106,11 @@ require (
 	google.golang.org/protobuf v1.26.0-rc.1 // indirect
 	honnef.co/go/tools v0.0.1-2019.2.3 // indirect
 )
+
+replace github.com/docker/distribution => github.com/docker/distribution v0.0.0-20191024225408-dee21c0394b5
+
+replace github.com/containerd/containerd => github.com/containerd/containerd v1.3.10
+
+replace github.com/containerd/continuity => github.com/containerd/continuity v0.1.0
+
+replace github.com/opencontainers/runc => github.com/opencontainers/runc v1.0.0-rc10

@@ -41,9 +41,9 @@ import (
 	"github.com/uber/kraken/utils/listener"
 	"github.com/uber/kraken/utils/log"
 
-	"github.com/pressly/chi"
-	chimiddleware "github.com/pressly/chi/middleware"
-	"github.com/uber-go/tally/v4"
+	"github.com/go-chi/chi"
+	chimiddleware "github.com/go-chi/chi/middleware"
+	"github.com/uber-go/tally"
 )
 
 // Server provides tag operations for the build-index.
