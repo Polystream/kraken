@@ -21,6 +21,7 @@ import (
 
 	"github.com/docker/distribution"
 	"github.com/docker/distribution/manifest/manifestlist"
+	"github.com/docker/distribution/manifest/ocischema"
 	"github.com/docker/distribution/manifest/schema2"
 	"github.com/uber/kraken/core"
 	"github.com/uber/kraken/utils/log"
@@ -28,7 +29,6 @@ import (
 
 const _v2ManifestType = "application/vnd.docker.distribution.manifest.v2+json"
 const _v2ManifestListType = "application/vnd.docker.distribution.manifest.list.v2+json"
-const _v1OCIManifestType = "application/vnd.oci.image.manifest.v1+json"
 
 func ParseManifest(ctHeader string, r io.Reader) (distribution.Manifest, core.Digest, error) {
 	b, err := ioutil.ReadAll(r)
@@ -52,14 +52,15 @@ func ParseManifestV2(ctHeader string, bytes []byte) (distribution.Manifest, core
 	if err != nil {
 		return nil, core.Digest{}, fmt.Errorf("unmarshal manifest: %s", err)
 	}
-	deserializedManifest, ok := manifest.(*schema2.DeserializedManifest)
-	if !ok {
-		return nil, core.Digest{}, errors.New("expected schema2.DeserializedManifest")
+	if deserializedManifest, ok := manifest.(*schema2.DeserializedManifest); ok {
+		version := deserializedManifest.Manifest.Versioned.SchemaVersion
+		if version != 2 {
+			return nil, core.Digest{}, fmt.Errorf("unsupported manifest version: %d", version)
+		}
+	} else if _, ok := manifest.(*ocischema.DeserializedManifest); !ok {
+		return nil, core.Digest{}, errors.New("expected schema2.DeserializedManifest or ocischema.DeserializedManifest")
 	}
-	version := deserializedManifest.Manifest.Versioned.SchemaVersion
-	if version != 2 {
-		return nil, core.Digest{}, fmt.Errorf("unsupported manifest version: %d", version)
-	}
+
 	d, err := core.ParseSHA256Digest(string(desc.Digest))
 	if err != nil {
 		return nil, core.Digest{}, fmt.Errorf("parse digest: %s", err)
@@ -102,5 +103,5 @@ func GetManifestReferences(manifest distribution.Manifest) ([]core.Digest, error
 }
 
 func GetSupportedManifestTypes() string {
-	return fmt.Sprintf("%s,%s,%s", _v2ManifestType, _v2ManifestListType, _v1OCIManifestType)
+	return fmt.Sprintf("%s,%s,%s", _v2ManifestType, _v2ManifestListType, ocischema.SchemaVersion.MediaType)
 }
