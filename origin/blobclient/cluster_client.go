@@ -4,7 +4,7 @@
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
 //
-//     http://www.apache.org/licenses/LICENSE-2.0
+//	http://www.apache.org/licenses/LICENSE-2.0
 //
 // Unless required by applicable law or agreed to in writing, software
 // distributed under the License is distributed on an "AS IS" BASIS,
@@ -79,7 +79,7 @@ func (r *clientResolver) Resolve(d core.Digest) ([]Client, error) {
 // location resolution and retries.
 type ClusterClient interface {
 	UploadBlob(namespace string, d core.Digest, blob io.Reader) error
-	DownloadBlob(namespace string, d core.Digest, dst io.Writer) error
+	DownloadBlob(namespace string, d core.Digest, dst io.Writer) (string, error)
 	GetMetaInfo(namespace string, d core.Digest) (*core.MetaInfo, error)
 	Stat(namespace string, d core.Digest) (*core.BlobInfo, error)
 	OverwriteMetaInfo(d core.Digest, pieceLength int64) error
@@ -184,14 +184,17 @@ func (c *clusterClient) OverwriteMetaInfo(d core.Digest, pieceLength int64) erro
 }
 
 // DownloadBlob pulls a blob from the origin cluster.
-func (c *clusterClient) DownloadBlob(namespace string, d core.Digest, dst io.Writer) error {
-	err := Poll(c.resolver, c.defaultPollBackOff(), d, func(client Client) error {
-		return client.DownloadBlob(namespace, d, dst)
+func (c *clusterClient) DownloadBlob(namespace string, d core.Digest, dst io.Writer) (string, error) {
+	var ctHeader string
+	var err error
+	err = Poll(c.resolver, c.defaultPollBackOff(), d, func(client Client) error {
+		ctHeader, err = client.DownloadBlob(namespace, d, dst)
+		return err
 	})
 	if httputil.IsNotFound(err) {
 		err = ErrBlobNotFound
 	}
-	return err
+	return ctHeader, err
 }
 
 // Owners returns the origin peers which own d.

@@ -4,7 +4,7 @@
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
 //
-//     http://www.apache.org/licenses/LICENSE-2.0
+//	http://www.apache.org/licenses/LICENSE-2.0
 //
 // Unless required by applicable law or agreed to in writing, software
 // distributed under the License is distributed on an "AS IS" BASIS,
@@ -140,7 +140,7 @@ func (c *TagClient) Download(namespace, name string, dst io.Writer) error {
 		return backenderrors.ErrBlobNotFound
 	}
 
-	_, digest, err := dockerutil.ParseManifest(resp.Body)
+	_, digest, err := dockerutil.ParseManifest(resp.Header.Get("Content-Type"), resp.Body)
 	if err != nil {
 		return fmt.Errorf("parse manifest v2: %s", err)
 	}

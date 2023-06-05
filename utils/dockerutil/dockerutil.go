@@ -29,24 +29,24 @@ const _v2ManifestType = "application/vnd.docker.distribution.manifest.v2+json"
 const _v2ManifestListType = "application/vnd.docker.distribution.manifest.list.v2+json"
 const _v1OCIManifestType = "application/vnd.oci.image.manifest.v1+json"
 
-func ParseManifest(r io.Reader) (distribution.Manifest, core.Digest, error) {
+func ParseManifest(ctHeader string, r io.Reader) (distribution.Manifest, core.Digest, error) {
 	b, err := ioutil.ReadAll(r)
 	if err != nil {
 		return nil, core.Digest{}, fmt.Errorf("read: %s", err)
 	}
 
-	manifest, d, err := ParseManifestV2(b)
+	manifest, d, err := ParseManifestV2(ctHeader, b)
 	if err == nil {
 		return manifest, d, err
 	}
 
 	// Retry with v2 manifest list.
-	return ParseManifestV2List(b)
+	return ParseManifestV2List(ctHeader, b)
 }
 
 // ParseManifestV2 returns a parsed v2 manifest and its digest.
-func ParseManifestV2(bytes []byte) (distribution.Manifest, core.Digest, error) {
-	manifest, desc, err := distribution.UnmarshalManifest(schema2.MediaTypeManifest, bytes)
+func ParseManifestV2(ctHeader string, bytes []byte) (distribution.Manifest, core.Digest, error) {
+	manifest, desc, err := distribution.UnmarshalManifest(ctHeader, bytes)
 	if err != nil {
 		return nil, core.Digest{}, fmt.Errorf("unmarshal manifest: %s", err)
 	}
@@ -66,8 +66,8 @@ func ParseManifestV2(bytes []byte) (distribution.Manifest, core.Digest, error) {
 }
 
 // ParseManifestV2List returns a parsed v2 manifest list and its digest.
-func ParseManifestV2List(bytes []byte) (distribution.Manifest, core.Digest, error) {
-	manifestList, desc, err := distribution.UnmarshalManifest(manifestlist.MediaTypeManifestList, bytes)
+func ParseManifestV2List(ctHeader string, bytes []byte) (distribution.Manifest, core.Digest, error) {
+	manifestList, desc, err := distribution.UnmarshalManifest(ctHeader, bytes)
 	if err != nil {
 		return nil, core.Digest{}, fmt.Errorf("unmarshal manifestlist: %s", err)
 	}

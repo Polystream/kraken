@@ -4,7 +4,7 @@
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
 //
-//     http://www.apache.org/licenses/LICENSE-2.0
+//	http://www.apache.org/licenses/LICENSE-2.0
 //
 // Unless required by applicable law or agreed to in writing, software
 // distributed under the License is distributed on an "AS IS" BASIS,
@@ -24,7 +24,7 @@ import (
 	"github.com/uber/kraken/lib/backend"
 	"github.com/uber/kraken/lib/hostlist"
 	"github.com/uber/kraken/lib/persistedretry/writeback"
-	"github.com/uber/kraken/mocks/origin/blobclient"
+	mockblobclient "github.com/uber/kraken/mocks/origin/blobclient"
 	"github.com/uber/kraken/origin/blobclient"
 	"github.com/uber/kraken/utils/httputil"
 
@@ -77,7 +77,8 @@ func TestClusterClientResilientToUnavailableMasters(t *testing.T) {
 		require.NotNil(mi)
 
 		var buf bytes.Buffer
-		require.NoError(cc.DownloadBlob(backend.NoopNamespace, blob.Digest, &buf))
+		_, err = cc.DownloadBlob(backend.NoopNamespace, blob.Digest, &buf)
+		require.NoError(err)
 		require.Equal(string(blob.Content), buf.String())
 
 		peers, err := cc.Owners(blob.Digest)
@@ -108,7 +109,8 @@ func TestClusterClientReturnsErrorOnNoAvailability(t *testing.T) {
 	_, err = cc.GetMetaInfo(backend.NoopNamespace, blob.Digest)
 	require.Error(err)
 
-	require.Error(cc.DownloadBlob(backend.NoopNamespace, blob.Digest, ioutil.Discard))
+	_, err = cc.DownloadBlob(backend.NoopNamespace, blob.Digest, ioutil.Discard)
+	require.Error(err)
 
 	_, err = cc.Owners(blob.Digest)
 	require.Error(err)
@@ -139,7 +141,8 @@ func TestPollSkipsOriginOnTimeout(t *testing.T) {
 	b := backoff.WithMaxRetries(backoff.NewConstantBackOff(100*time.Millisecond), 5)
 
 	require.NoError(blobclient.Poll(mockResolver, b, blob.Digest, func(c blobclient.Client) error {
-		return c.DownloadBlob(namespace, blob.Digest, nil)
+		_, err := c.DownloadBlob(namespace, blob.Digest, nil)
+		return err
 	}))
 }
 

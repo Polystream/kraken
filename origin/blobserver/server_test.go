@@ -4,7 +4,7 @@
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
 //
-//     http://www.apache.org/licenses/LICENSE-2.0
+//	http://www.apache.org/licenses/LICENSE-2.0
 //
 // Unless required by applicable law or agreed to in writing, software
 // distributed under the License is distributed on an "AS IS" BASIS,
@@ -195,7 +195,7 @@ func TestDownloadBlobNotFound(t *testing.T) {
 	backendClient := s.backendClient(namespace)
 	backendClient.EXPECT().Stat(namespace, d.Hex()).Return(nil, backenderrors.ErrBlobNotFound)
 
-	err := cp.Provide(master1).DownloadBlob(namespace, d, ioutil.Discard)
+	_, err := cp.Provide(master1).DownloadBlob(namespace, d, ioutil.Discard)
 	require.Error(err)
 	require.Equal(http.StatusNotFound, err.(httputil.StatusError).Status)
 }

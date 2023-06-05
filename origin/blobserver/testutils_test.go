@@ -4,7 +4,7 @@
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
 //
-//     http://www.apache.org/licenses/LICENSE-2.0
+//	http://www.apache.org/licenses/LICENSE-2.0
 //
 // Unless required by applicable law or agreed to in writing, software
 // distributed under the License is distributed on an "AS IS" BASIS,
@@ -33,9 +33,9 @@ import (
 	"github.com/uber/kraken/lib/hostlist"
 	"github.com/uber/kraken/lib/metainfogen"
 	"github.com/uber/kraken/lib/store"
-	"github.com/uber/kraken/mocks/lib/backend"
-	"github.com/uber/kraken/mocks/lib/persistedretry"
-	"github.com/uber/kraken/mocks/origin/blobclient"
+	mockbackend "github.com/uber/kraken/mocks/lib/backend"
+	mockpersistedretry "github.com/uber/kraken/mocks/lib/persistedretry"
+	mockblobclient "github.com/uber/kraken/mocks/origin/blobclient"
 	"github.com/uber/kraken/origin/blobclient"
 	"github.com/uber/kraken/utils/log"
 	"github.com/uber/kraken/utils/stringset"
@@ -186,6 +186,7 @@ func computeBlobForHosts(ring hashring.Ring, hosts ...string) *core.BlobFixture 
 
 func ensureHasBlob(t *testing.T, c blobclient.Client, namespace string, blob *core.BlobFixture) {
 	var buf bytes.Buffer
-	require.NoError(t, c.DownloadBlob(namespace, blob.Digest, &buf))
+	_, err := c.DownloadBlob(namespace, blob.Digest, &buf)
+	require.NoError(t, err)
 	require.Equal(t, string(blob.Content), buf.String())
 }

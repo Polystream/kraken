@@ -4,7 +4,7 @@
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
 //
-//     http://www.apache.org/licenses/LICENSE-2.0
+//	http://www.apache.org/licenses/LICENSE-2.0
 //
 // Unless required by applicable law or agreed to in writing, software
 // distributed under the License is distributed on an "AS IS" BASIS,
@@ -42,10 +42,12 @@ func (r *dockerResolver) Resolve(tag string, d core.Digest) (core.DigestList, er
 
 func (r *dockerResolver) downloadManifest(tag string, d core.Digest) (distribution.Manifest, error) {
 	buf := &bytes.Buffer{}
-	if err := r.originClient.DownloadBlob(tag, d, buf); err != nil {
+	var ctHeader string
+	var err error
+	if ctHeader, err = r.originClient.DownloadBlob(tag, d, buf); err != nil {
 		return nil, fmt.Errorf("download blob: %s", err)
 	}
-	manifest, _, err := dockerutil.ParseManifest(buf)
+	manifest, _, err := dockerutil.ParseManifest(ctHeader, buf)
 	if err != nil {
 		return nil, fmt.Errorf("parse manifest: %s", err)
 	}

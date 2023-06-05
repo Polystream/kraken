@@ -4,7 +4,7 @@
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
 //
-//     http://www.apache.org/licenses/LICENSE-2.0
+//	http://www.apache.org/licenses/LICENSE-2.0
 //
 // Unless required by applicable law or agreed to in writing, software
 // distributed under the License is distributed on an "AS IS" BASIS,
@@ -49,7 +49,7 @@ type Client interface {
 	UploadBlob(namespace string, d core.Digest, blob io.Reader) error
 	DuplicateUploadBlob(namespace string, d core.Digest, blob io.Reader, delay time.Duration) error
 
-	DownloadBlob(namespace string, d core.Digest, dst io.Writer) error
+	DownloadBlob(namespace string, d core.Digest, dst io.Writer) (string, error)
 
 	ReplicateToRemote(namespace string, d core.Digest, remoteDNS string) error
 
@@ -190,18 +190,18 @@ func (c *HTTPClient) DuplicateUploadBlob(
 // (i.e. still downloading), returns 202 httputil.StatusError, indicating that
 // the request shoudl be retried later. If not blob exists for d, returns a 404
 // httputil.StatusError.
-func (c *HTTPClient) DownloadBlob(namespace string, d core.Digest, dst io.Writer) error {
+func (c *HTTPClient) DownloadBlob(namespace string, d core.Digest, dst io.Writer) (string, error) {
 	r, err := httputil.Get(
 		fmt.Sprintf("http://%s/namespace/%s/blobs/%s", c.addr, url.PathEscape(namespace), d),
 		httputil.SendTLS(c.tls))
 	if err != nil {
-		return err
+		return "", err
 	}
 	defer r.Body.Close()
 	if _, err := io.Copy(dst, r.Body); err != nil {
-		return fmt.Errorf("copy body: %s", err)
+		return "", fmt.Errorf("copy body: %s", err)
 	}
-	return nil
+	return r.Header.Get("Content-Type"), nil
 }
 
 // ReplicateToRemote replicates the blob of d to a remote origin cluster. If the
