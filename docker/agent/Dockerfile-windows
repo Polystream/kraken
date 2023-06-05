@@ -1,4 +1,4 @@
-FROM mcr.microsoft.com/windows/servercore:20H2
+FROM mcr.microsoft.com/windows/servercore:ltsc2022
 
 ARG NGINX_VERSION=1.21.6
 
