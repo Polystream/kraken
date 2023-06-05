@@ -4,7 +4,7 @@
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
 //
-//     http://www.apache.org/licenses/LICENSE-2.0
+//	http://www.apache.org/licenses/LICENSE-2.0
 //
 // Unless required by applicable law or agreed to in writing, software
 // distributed under the License is distributed on an "AS IS" BASIS,
@@ -27,6 +27,7 @@ import (
 
 const _v2ManifestType = "application/vnd.docker.distribution.manifest.v2+json"
 const _v2ManifestListType = "application/vnd.docker.distribution.manifest.list.v2+json"
+const _v1OCIManifestType = "application/vnd.oci.image.manifest.v1+json"
 
 func ParseManifest(r io.Reader) (distribution.Manifest, core.Digest, error) {
 	b, err := ioutil.ReadAll(r)
@@ -99,5 +100,5 @@ func GetManifestReferences(manifest distribution.Manifest) ([]core.Digest, error
 }
 
 func GetSupportedManifestTypes() string {
-	return fmt.Sprintf("%s,%s", _v2ManifestType, _v2ManifestListType)
+	return fmt.Sprintf("%s,%s,%s", _v2ManifestType, _v2ManifestListType, _v1OCIManifestType)
 }
