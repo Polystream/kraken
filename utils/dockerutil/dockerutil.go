@@ -23,6 +23,7 @@ import (
 	"github.com/docker/distribution/manifest/manifestlist"
 	"github.com/docker/distribution/manifest/schema2"
 	"github.com/uber/kraken/core"
+	"github.com/uber/kraken/utils/log"
 )
 
 const _v2ManifestType = "application/vnd.docker.distribution.manifest.v2+json"
@@ -40,6 +41,7 @@ func ParseManifest(ctHeader string, r io.Reader) (distribution.Manifest, core.Di
 		return manifest, d, err
 	}
 
+	log.Infof("unable to parse manifest: %s %s", ctHeader, err)
 	// Retry with v2 manifest list.
 	return ParseManifestV2List(ctHeader, b)
 }
