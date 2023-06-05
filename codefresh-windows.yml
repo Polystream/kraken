@@ -17,7 +17,7 @@ steps:
 
   build:
     working_directory: ${{clone}}
-    image: rancher/golang:1.17-windowsservercore-20H2
+    image: golang:1.17.13-nanoserver-ltsc2022
     commands:
       - go build -o %PROJ% -gcflags='all=-N' ./%PROJ%
     stage: build
