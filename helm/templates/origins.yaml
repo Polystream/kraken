@@ -21,7 +21,7 @@ spec:
 {{ tpl . $ | indent 8 }}
       {{- end }}
     spec:
-      {{ with .Values.agent.tolerations -}}
+      {{ with .Values.origin.tolerations -}}
       tolerations:
 {{ toYaml . | indent 6 }}
       {{- end }}
