@@ -102,7 +102,9 @@ apiVersion: v1
 metadata:
   name: kraken-agent
 spec:
-  type: NodePort
+{{- if .Values.agent.serviceIP }}
+  clusterIP: {{ .Values.agent.serviceIP }}
+{{- end }}
   selector:
     app.kubernetes.io/name: kraken
     app.kubernetes.io/component: agent
