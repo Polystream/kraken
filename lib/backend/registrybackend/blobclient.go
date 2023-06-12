@@ -136,6 +136,7 @@ func (c *BlobClient) statHelper(namespace, name, query string, opts []httputil.S
 
 func (c *BlobClient) downloadHelper(namespace, name, query string, dst io.Writer, opts []httputil.SendOption) error {
 	URL := fmt.Sprintf(query, c.config.Address, namespace, name)
+	log.Infof("Starting download from %s and timeout %d", URL, c.config.Timeout)
 	resp, err := httputil.Get(
 		URL,
 		append(
