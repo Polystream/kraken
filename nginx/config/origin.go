@@ -4,7 +4,7 @@
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
 //
-//     http://www.apache.org/licenses/LICENSE-2.0
+//	http://www.apache.org/licenses/LICENSE-2.0
 //
 // Unless required by applicable law or agreed to in writing, software
 // distributed under the License is distributed on an "AS IS" BASIS,
@@ -27,6 +27,30 @@ server {
 
   gzip on;
   gzip_types text/plain test/csv application/json;
+
+  location ~ /namespace/(.*)/blobs/([\w.\-_]*) {
+    proxy_pass http://{{.server}};
+    proxy_next_upstream error timeout http_404 http_500;
+    proxy_buffering off;
+    proxy_request_buffering off;
+    proxy_cache off;
+    proxy_read_timeout 43200s;
+    sendfile on;
+    tcp_nopush on;
+    tcp_nodelay on;
+  }
+
+  location ~ /internal/namespace/(.*)/blobs/(.*)/metainfo {
+    proxy_pass http://{{.server}};
+    proxy_next_upstream error timeout http_404 http_500;
+    proxy_buffering off;
+    proxy_request_buffering off;
+    proxy_cache off;
+    proxy_read_timeout 43200s;
+    sendfile on;
+    tcp_nopush on;
+    tcp_nodelay on;
+  }
 
   location / {
     proxy_pass http://{{.server}};
