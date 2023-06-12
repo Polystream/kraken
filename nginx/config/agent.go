@@ -44,7 +44,7 @@ server {
     proxy_pass http://agent-server;
   }
 
-  location /namespace/ {
+  location / {
     proxy_pass http://registry-backend;
     proxy_next_upstream error timeout http_404 http_500;
     proxy_buffering off;
@@ -54,11 +54,6 @@ server {
     sendfile on;
     tcp_nopush on;
     tcp_nodelay on;
-  }
-
-  location / {
-    proxy_pass http://registry-backend;
-    proxy_next_upstream error timeout http_404 http_500;
   }
 }
 `
