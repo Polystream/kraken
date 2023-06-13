@@ -54,11 +54,11 @@ spec:
           name: peer
         - containerPort: 9000
           name: metrics
+{{ with .Values.origin.extraVolumeMounts }}{{ toYaml . | indent 8 }}{{ end }}
     {{- with .Values.kraken.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
     {{- end }}
-{{ with .Values.origin.extraVolumeMounts }}{{ toYaml . | indent 8 }}{{ end }}
       volumes:
       - name: config
         configMap:

@@ -43,6 +43,7 @@ spec:
         - name: secret
           mountPath: /etc/secrets
         {{- end }}
+{{ with .Values.build_index.extraVolumeMounts }}{{ toYaml . | indent 8 }}{{ end }}
         ports:
         - containerPort: 80
           name: build-index
@@ -52,7 +53,6 @@ spec:
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
     {{- end }}
-{{ with .Values.build_index.extraVolumeMounts }}{{ toYaml . | indent 8 }}{{ end }}
       volumes:
       - name: config
         configMap:
