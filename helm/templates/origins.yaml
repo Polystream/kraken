@@ -47,6 +47,7 @@ spec:
         - name: secret
           mountPath: /etc/secrets
         {{- end }}
+{{ with .Values.origin.extraVolumeMounts }}{{ toYaml . | indent 8 }}{{ end }}
         ports:
         - containerPort: 80
           name: blobserver
@@ -54,7 +55,6 @@ spec:
           name: peer
         - containerPort: 9000
           name: metrics
-{{ with .Values.origin.extraVolumeMounts }}{{ toYaml . | indent 8 }}{{ end }}
     {{- with .Values.kraken.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
