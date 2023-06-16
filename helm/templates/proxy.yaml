@@ -49,6 +49,7 @@ spec:
         - name: secret
           mountPath: /etc/secrets
         {{- end }}
+{{ with .Values.proxy.extraVolumeMounts }}{{ toYaml . | indent 8 }}{{ end }}
         ports:
         - containerPort: 80
           name: proxy
@@ -78,7 +79,6 @@ spec:
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
     {{- end }}
-{{ with .Values.proxy.extraVolumeMounts }}{{ toYaml . | indent 8 }}{{ end }}
       volumes:
       - name: config
         configMap:

@@ -21,6 +21,10 @@ spec:
 {{ tpl . $ | indent 8 }}
       {{- end }}
     spec:
+      {{ with .Values.origin.tolerations -}}
+      tolerations:
+{{ toYaml . | indent 6 }}
+      {{- end }}
       {{ with .Values.origin.affinity -}}
       affinity:
 {{ toYaml . | indent 8 }}
@@ -43,6 +47,7 @@ spec:
         - name: secret
           mountPath: /etc/secrets
         {{- end }}
+{{ with .Values.origin.extraVolumeMounts }}{{ toYaml . | indent 8 }}{{ end }}
         ports:
         - containerPort: 80
           name: blobserver
@@ -54,7 +59,6 @@ spec:
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
     {{- end }}
-{{ with .Values.origin.extraVolumeMounts }}{{ toYaml . | indent 8 }}{{ end }}
       volumes:
       - name: config
         configMap:

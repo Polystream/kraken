@@ -80,6 +80,7 @@ proxy:
 agent:
   enabled: true
   config: /etc/config/agent.yaml
+  serviceIP:
   annotations:
   extraVolumes:
   extraVolumeMounts:
